@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 const tBlue = Color(0xFF3464D4);
+const tBlueG = Color(0XFF5186FF);
 const tWhite = Color(0xFFFEFEFF);
 const tBlack = Color(0xFF3A3A3A);
 const tWG = Color.fromARGB(255, 246, 246, 246);
@@ -27,4 +28,16 @@ const conText2 = TextStyle(
   fontSize: 12,
   fontWeight: FontWeight.w500,
   color: tBlue,
+);
+
+const conNum = TextStyle(
+  fontSize: 30,
+  fontWeight: FontWeight.bold,
+  color: tBlack,
+);
+
+const gradCon = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+  color: tWhite,
 );

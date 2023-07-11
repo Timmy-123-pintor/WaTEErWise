@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../constant.dart';
+import '../../../../constant.dart';
 
 class PaymentGraph extends StatelessWidget {
   const PaymentGraph({super.key});

@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../constant.dart';
 
-class ConsumptionTrend extends StatelessWidget {
-  const ConsumptionTrend({super.key});
+class WLimitGraph extends StatelessWidget {
+  const WLimitGraph({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class ConsumptionTrend extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              width: 10,
+              width: 5,
             ),
             Text(
               'June 2025',
