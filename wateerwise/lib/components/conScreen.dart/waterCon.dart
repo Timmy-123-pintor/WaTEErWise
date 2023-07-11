@@ -16,7 +16,7 @@ class WaterConsumption extends StatelessWidget {
       decoration: BoxDecoration(
         color: tWhite,
         image: const DecorationImage(
-          image: AssetImage('asset/GIF/waterdrop.gif'),
+          image: AssetImage('assets/GIF/waterdrop.gif'),
           fit: BoxFit.cover,
         ),
         borderRadius: const BorderRadius.only(

@@ -5,6 +5,8 @@ const tBlueG = Color(0XFF5186FF);
 const tWhite = Color(0xFFFEFEFF);
 const tBlack = Color(0xFF3A3A3A);
 const tWG = Color.fromARGB(255, 246, 246, 246);
+const tGray = Color.fromARGB(255, 219, 219, 219);
+const tGreen = Color(0XFF3F8B35);
 
 // Text
 const waterStyle = TextStyle(
@@ -40,4 +42,16 @@ const gradCon = TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.bold,
   color: tWhite,
+);
+
+const paid = TextStyle(
+  fontSize: 10,
+  fontWeight: FontWeight.normal,
+  color: tGreen,
+);
+
+const conTextBlack = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w500,
+  color: tBlack,
 );
