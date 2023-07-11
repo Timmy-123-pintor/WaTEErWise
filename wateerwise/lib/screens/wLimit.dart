@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wateerwise/components/Graphs/HomeGraphs/waterPoint.dart';
 
 import '../components/Graphs/HomeGraphs/consumptionGraph.dart';
 import '../components/Graphs/WLimitGraph/wLimitGraph.dart';
@@ -32,21 +33,21 @@ class _WLimitState extends State<WLimit> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: ListView(
-                  children: const [
-                    SizedBox(
+                  children: [
+                    const SizedBox(
                       height: 20,
                     ),
-                    WLimitGraph(),
-                    SizedBox(
+                    const WLimitGraph(),
+                    const SizedBox(
                       height: 20,
                     ),
-                    Center(
+                    const Center(
                       child: WaterCon(),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    ConsumptionTrend(),
+                    ConsumptionTrend(waterPoints),
                   ],
                 ),
               ),
