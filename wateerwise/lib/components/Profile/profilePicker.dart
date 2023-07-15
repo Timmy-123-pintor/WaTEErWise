@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -31,20 +32,28 @@ class ProfilePick extends StatelessWidget {
               Positioned(
                 bottom: 0,
                 right: 0,
-                child: Container(
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      width: 3,
+                child: GestureDetector(
+                  onTap: () {
+                    // Handle the click event here
+                    if (kDebugMode) {
+                      print('Container clicked!');
+                    }
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        width: 3,
+                        color: tWhite,
+                      ),
+                      color: tGray,
+                    ),
+                    child: const Icon(
+                      Icons.edit,
                       color: tWhite,
                     ),
-                    color: tGray,
-                  ),
-                  child: const Icon(
-                    Icons.edit,
-                    color: tWhite,
                   ),
                 ),
               )

@@ -48,6 +48,32 @@ class _WLimitState extends State<WLimit> {
                       height: 10,
                     ),
                     ConsumptionTrend(waterPoints),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: 350,
+                      height: 235,
+                      decoration: BoxDecoration(
+                        color: tWhite,
+                        image: const DecorationImage(
+                          image: AssetImage('assets/images/conHistory.png'),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5), // Shadow color
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
