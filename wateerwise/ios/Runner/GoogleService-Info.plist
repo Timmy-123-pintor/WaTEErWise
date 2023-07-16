@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>602648296786-trqhhia9qq694bh04idnst83f8fvggk2.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.602648296786-trqhhia9qq694bh04idnst83f8fvggk2</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>602648296786-lug2oshth6d1dqhi3tr1bl654l43ldcf.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBrbrbr28JzbOXeak2xhanmJZX3jtS2g34</string>
+	<key>GCM_SENDER_ID</key>
+	<string>602648296786</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.wateerwise</string>
+	<key>PROJECT_ID</key>
+	<string>waterwise-database</string>
+	<key>STORAGE_BUCKET</key>
+	<string>waterwise-database.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:602648296786:ios:0f3615b67b447615d34e8b</string>
+	<key>DATABASE_URL</key>
+	<string>https://waterwise-database-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+</dict>
+</plist>
