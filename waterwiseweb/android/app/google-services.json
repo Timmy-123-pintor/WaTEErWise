@@ -1,0 +1,91 @@
+{
+  "project_info": {
+    "project_number": "602648296786",
+    "firebase_url": "https://waterwise-database-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "waterwise-database",
+    "storage_bucket": "waterwise-database.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602648296786:android:fd525bac52ccb0dad34e8b",
+        "android_client_info": {
+          "package_name": "com.example.wateerwise"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "602648296786-lug2oshth6d1dqhi3tr1bl654l43ldcf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.wateerwise",
+            "certificate_hash": "f16fa96013460b0113b2efd33eaca2ddbcf2531f"
+          }
+        },
+        {
+          "client_id": "602648296786-vn06clknlanqu3gjmmmkc448ohsun0ni.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAv9KulUybMqG88bsx4lXNZND_zv4QWnYc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "602648296786-vn06clknlanqu3gjmmmkc448ohsun0ni.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "602648296786-4dp5bpc91lu217tsta9hc78d1cjallkc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.wateerwise.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602648296786:android:d9d24d90b8639430d34e8b",
+        "android_client_info": {
+          "package_name": "com.example.waterwiseweb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "602648296786-vn06clknlanqu3gjmmmkc448ohsun0ni.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAv9KulUybMqG88bsx4lXNZND_zv4QWnYc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "602648296786-vn06clknlanqu3gjmmmkc448ohsun0ni.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "602648296786-4dp5bpc91lu217tsta9hc78d1cjallkc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.wateerwise.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
