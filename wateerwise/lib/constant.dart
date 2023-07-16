@@ -143,6 +143,7 @@ const conText1 = TextStyle(
   color: tBlue,
 );
 
+<<<<<<< Updated upstream
 //custom widget
 class DescriptionWidget extends StatelessWidget {
   final String title;
@@ -185,3 +186,16 @@ class DescriptionWidget extends StatelessWidget {
     );
   }
 }
+=======
+const conText1 = TextStyle(
+  fontSize: 32,
+  fontWeight: FontWeight.bold,
+  color: tBlue,
+);
+
+const conText2 = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w500,
+  color: tBlue,
+);
+>>>>>>> Stashed changes

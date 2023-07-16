@@ -1,19 +1,33 @@
+<<<<<<< Updated upstream
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wateerwise/components/Graphs/HomeGraphs/waterPoint.dart';
+=======
+// ignore_for_file: file_names
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+>>>>>>> Stashed changes
 
 import '../../../constant.dart';
 
 class ConsumptionTrend extends StatelessWidget {
+<<<<<<< Updated upstream
   final List<WaterPoint> points;
   const ConsumptionTrend(this.points, {super.key});
+=======
+  const ConsumptionTrend({super.key});
+>>>>>>> Stashed changes
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 350,
+<<<<<<< Updated upstream
       height: 220,
+=======
+      height: 180,
+>>>>>>> Stashed changes
       decoration: BoxDecoration(
         color: tWhite,
         borderRadius: const BorderRadius.only(
@@ -29,6 +43,7 @@ class ConsumptionTrend extends StatelessWidget {
           ),
         ],
       ),
+<<<<<<< Updated upstream
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -58,10 +73,34 @@ class ConsumptionTrend extends StatelessWidget {
             ])),
           ),
         ],
+=======
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Row(
+          children: [
+            Text(
+              'Graph',
+              style: GoogleFonts.quicksand(
+                textStyle: conText1,
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              'June 2025',
+              style: GoogleFonts.quicksand(
+                textStyle: conText1,
+              ),
+            ),
+          ],
+        ),
+>>>>>>> Stashed changes
       ),
     );
   }
 }
+<<<<<<< Updated upstream
 
 // ignore_for_file: file_names
 // import 'package:flutter/material.dart';
@@ -116,3 +155,5 @@ class ConsumptionTrend extends StatelessWidget {
 //     );
 //   }
 // }
+=======
+>>>>>>> Stashed changes
