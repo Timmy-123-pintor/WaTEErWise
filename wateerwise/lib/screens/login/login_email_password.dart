@@ -4,7 +4,8 @@ import 'package:wateerwise/services/firebase_auth_methods.dart';
 import 'package:wateerwise/widgets/custom_textfiled.dart';
 
 class EmailPasswordLogin extends StatefulWidget {
-  static String routeName = '/login-email-password';
+  static const routeName = '/login-email-password';
+
   const EmailPasswordLogin({Key? key}) : super(key: key);
 
   @override
@@ -12,15 +13,41 @@ class EmailPasswordLogin extends StatefulWidget {
 }
 
 class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
 
-  void loginUser() {
-    context.read<FirebaseAuthMethods>().loginWithEmail(
-          email: emailController.text,
-          password: passwordController.text,
-          context: context,
-        );
+  @override
+  void initState() {
+    super.initState();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> loginUser() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    try {
+      await context.read<FirebaseAuthMethods>().loginWithEmail(
+            email: email,
+            password: password,
+            context: context,
+          );
+    } catch (e) {
+      // Handle login error here
+      print('Login error: $e');
+      // Show an error message to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login failed. Please try again.')),
+      );
+    }
   }
 
   @override
