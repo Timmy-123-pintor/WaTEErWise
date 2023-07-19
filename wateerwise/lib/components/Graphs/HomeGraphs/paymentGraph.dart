@@ -11,8 +11,8 @@ class PaymentGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 350,
-      height: 220,
+      width: MediaQuery.of(context).size.width * 0.8,
+      height: MediaQuery.of(context).size.height * 0.3,
       decoration: BoxDecoration(
         color: tWhite,
         borderRadius: const BorderRadius.only(
@@ -46,15 +46,20 @@ class PaymentGraph extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          AspectRatio(
-            aspectRatio: 2,
-            child: LineChart(LineChartData(lineBarsData: [
-              LineChartBarData(
-                  spots:
-                      points.map((point) => FlSpot(point.x, point.y)).toList(),
-                  isCurved: true,
-                  dotData: const FlDotData(show: true))
-            ])),
+          Expanded(
+            child: Center(
+              child: AspectRatio(
+                aspectRatio: 2,
+                child: LineChart(LineChartData(lineBarsData: [
+                  LineChartBarData(
+                      spots: points
+                          .map((point) => FlSpot(point.x, point.y))
+                          .toList(),
+                      isCurved: true,
+                      dotData: const FlDotData(show: true))
+                ])),
+              ),
+            ),
           ),
         ],
       ),

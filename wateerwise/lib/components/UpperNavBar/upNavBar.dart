@@ -45,7 +45,7 @@ class _UpTabBarState extends State<UpTabBar>
           elevation: 0.0,
         ),
       ),
-      body: Container(
+      body: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [

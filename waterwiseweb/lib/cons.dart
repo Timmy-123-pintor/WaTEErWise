@@ -137,6 +137,12 @@ const waterStyle = TextStyle(
   color: tBlue,
 );
 
+const waterWhite = TextStyle(
+  fontSize: 40,
+  fontWeight: FontWeight.bold,
+  color: tWhite,
+);
+
 const conText1 = TextStyle(
   fontSize: 32,
   fontWeight: FontWeight.bold,

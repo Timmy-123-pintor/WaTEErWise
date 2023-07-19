@@ -14,8 +14,8 @@ class WaterCon extends StatelessWidget {
         Row(
           children: [
             Container(
-              height: 46,
-              width: 213,
+              width: MediaQuery.of(context).size.width * 0.6,
+              height: 45,
               decoration: BoxDecoration(
                 color: tWhite,
                 boxShadow: [
@@ -54,7 +54,10 @@ class WaterCon extends StatelessWidget {
             const SizedBox(
               width: 10,
             ),
-            DropdownContainer(),
+            const Expanded(
+              flex: 1,
+              child: DropdownContainer(),
+            ),
           ],
         ),
         const SizedBox(

@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../constant.dart';
 
 class DropdownContainer extends StatefulWidget {
+  const DropdownContainer({super.key});
+
   @override
   _DropdownContainerState createState() => _DropdownContainerState();
 }
@@ -15,7 +17,6 @@ class _DropdownContainerState extends State<DropdownContainer> {
   Widget build(BuildContext context) {
     return Container(
       height: 45,
-      width: 125,
       decoration: BoxDecoration(
         color: tWhite,
         boxShadow: [

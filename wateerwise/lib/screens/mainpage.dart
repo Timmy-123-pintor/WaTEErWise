@@ -46,11 +46,17 @@ class _MainPageState extends State<MainPage> {
                     const Center(
                       child: Row(
                         children: [
-                          PrevComCon(),
+                          Expanded(
+                            flex: 1,
+                            child: PrevComCon(),
+                          ),
                           SizedBox(
                             width: 10,
                           ),
-                          CurrentBill(),
+                          Expanded(
+                            flex: 1,
+                            child: CurrentBill(),
+                          ),
                         ],
                       ),
                     ),

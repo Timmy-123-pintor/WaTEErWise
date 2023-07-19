@@ -9,7 +9,6 @@ class CurrentBill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 170,
       height: 100,
       decoration: BoxDecoration(
         color: tWhite,

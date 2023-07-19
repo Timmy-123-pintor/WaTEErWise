@@ -45,7 +45,7 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
       print('Login error: $e');
       // Show an error message to the user
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Login failed. Please try again.')),
+        const SnackBar(content: Text('Login failed. Please try again.')),
       );
     }
   }

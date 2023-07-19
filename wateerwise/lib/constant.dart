@@ -61,13 +61,12 @@ const profileRow = TextStyle(
   color: tBlack,
 );
 
-//font size 11-20 -------------------
-
 const conText2 = TextStyle(
-  fontSize: 12,
+  fontSize: 10,
   fontWeight: FontWeight.w500,
   color: tBlue,
 );
+//font size 11-20 -------------------
 
 const conTextBlack = TextStyle(
   fontSize: 12,
