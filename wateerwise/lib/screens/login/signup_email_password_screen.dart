@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wateerwise/screens/login/login_email_password.dart';
 import 'package:wateerwise/services/firebase_auth_methods.dart';
 import 'package:wateerwise/widgets/custom_textfiled.dart';
 
@@ -16,11 +19,20 @@ class _EmailPasswordSignupState extends State<EmailPasswordSignup> {
   final TextEditingController passwordController = TextEditingController();
 
   void signUpUser() async {
-    context.read<FirebaseAuthMethods>().signUpWithEmail(
-          email: emailController.text,
-          password: passwordController.text,
-          context: context,
-        );
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    try {
+      await context.read<FirebaseAuthMethods>().signUpWithEmail(
+            email: email,
+            password: password,
+            context: context,
+          );
+      // After successful signup, navigate to the login screen
+      Navigator.pushNamed(context, EmailPasswordLogin.routeName);
+    } catch (e) {
+      // Handle signup error
+    }
   }
 
   @override

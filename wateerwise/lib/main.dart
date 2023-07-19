@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:wateerwise/components/UpperNavBar/upNavBar.dart';
 import 'package:wateerwise/firebase_options.dart';
 import 'package:wateerwise/screens/login/login_email_password.dart';
-import 'package:wateerwise/screens/login/login_screen.dart';
 import 'package:wateerwise/screens/login/signup_email_password_screen.dart';
 import 'package:wateerwise/services/firebase_auth_methods.dart';
 
@@ -34,7 +33,6 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Firebase Auth Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
@@ -58,6 +56,6 @@ class AuthWrapper extends StatelessWidget {
     if (firebaseUser != null) {
       return const UpTabBar();
     }
-    return const LoginScreen();
+    return const EmailPasswordLogin();
   }
 }

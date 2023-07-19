@@ -1,14 +1,18 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wateerwise/components/UpperNavBar/upNavBar.dart';
 import 'package:wateerwise/services/firebase_auth_methods.dart';
 import 'package:wateerwise/widgets/custom_textfiled.dart';
 
 class EmailPasswordLogin extends StatefulWidget {
-  static const routeName = '/login-email-password';
-
+  static const routeName = '/EmailPasswordLogin';
   const EmailPasswordLogin({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _EmailPasswordLoginState createState() => _EmailPasswordLoginState();
 }
 
@@ -39,13 +43,16 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
             email: email,
             password: password,
             context: context,
-          );
+          );  
+      Navigator.pushNamedAndRemoveUntil(context, UpTabBar.routeName, (route) => false);
     } catch (e) {
       // Handle login error here
-      print('Login error: $e');
+      if (kDebugMode) {
+        print('Login error: $e');
+      }
       // Show an error message to the user
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login failed. Please try again.')),
+        const SnackBar(content: Text('Login Successfully!')),
       );
     }
   }

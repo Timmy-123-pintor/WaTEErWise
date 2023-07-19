@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:wateerwise/services/firebase_auth_methods.dart';
 
 import '../../constant.dart';
 
@@ -176,10 +178,15 @@ class AccounntInfo extends StatelessWidget {
                   const SizedBox(
                     width: 15,
                   ),
-                  Text(
-                    'Logout',
-                    style: GoogleFonts.quicksand(
-                      textStyle: profileText,
+                  GestureDetector(
+                    onTap: () {
+                      context.read<FirebaseAuthMethods>().signOut(context);
+                    },
+                    child: Text(
+                      'Logout',
+                      style: GoogleFonts.quicksand(
+                        textStyle: profileText,
+                      ),
                     ),
                   ),
                 ],

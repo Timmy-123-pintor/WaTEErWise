@@ -1,5 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:wateerwise/components/UpperNavBar/upNavBar.dart';
 import 'package:wateerwise/utils/showSnackbar.dart';
 
 class FirebaseAuthMethods {
@@ -36,9 +40,13 @@ class FirebaseAuthMethods {
     } on FirebaseAuthException catch (e) {
       // if you want to display your own custom error message
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        if (kDebugMode) {
+          print('The password provided is too weak.');
+        }
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        if (kDebugMode) {
+          print('The account already exists for that email.');
+        }
       }
       showSnackBar(
           context, e.message!); // Displaying the usual firebase error message
@@ -56,12 +64,17 @@ class FirebaseAuthMethods {
         email: email,
         password: password,
       );
-      if (!user.emailVerified) {
-        await sendEmailVerification(context);
-        // restrict access to certain things using provider
-        // transition to another page instead of home screen
-      }
+      Navigator.of(context).pushReplacementNamed(UpTabBar.routeName);
     } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        if (kDebugMode) {
+          print('No user found for that email.');
+        }
+      } else if (e.code == 'wrong-password') {
+        if (kDebugMode) {
+          print('Wrong password provided for that user.');
+        }
+      }
       showSnackBar(context, e.message!); // Displaying the error message
     }
   }
@@ -80,6 +93,7 @@ class FirebaseAuthMethods {
   Future<void> signOut(BuildContext context) async {
     try {
       await _auth.signOut();
+      // Do something after successful sign-out (e.g., navigate to login screen)
     } on FirebaseAuthException catch (e) {
       showSnackBar(context, e.message!); // Displaying the error message
     }
@@ -89,6 +103,7 @@ class FirebaseAuthMethods {
   Future<void> deleteAccount(BuildContext context) async {
     try {
       await _auth.currentUser!.delete();
+      // Do something after successful account deletion (e.g., navigate to login screen)
     } on FirebaseAuthException catch (e) {
       showSnackBar(context, e.message!); // Displaying the error message
       // if an error of requires-recent-login is thrown, make sure to log
