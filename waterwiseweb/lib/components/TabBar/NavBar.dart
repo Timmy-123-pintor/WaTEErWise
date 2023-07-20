@@ -4,9 +4,10 @@ import 'package:waterwiseweb/Screens/addUser.dart';
 import 'package:waterwiseweb/Screens/bill.dart';
 import 'package:waterwiseweb/Screens/devices.dart';
 import 'package:waterwiseweb/Screens/mainpage.dart';
-import 'package:waterwiseweb/cons.dart';
+import 'package:waterwiseweb/constants/cons.dart';
 
 class Tabbar extends StatefulWidget {
+  static const routeName = '/Tabbar';
   const Tabbar({super.key});
 
   @override

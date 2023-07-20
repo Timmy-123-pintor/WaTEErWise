@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:waterwiseweb/cons.dart';
+import 'package:waterwiseweb/constants/cons.dart';
 
 class AddUser extends StatefulWidget {
   const AddUser({super.key});
