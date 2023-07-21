@@ -53,31 +53,41 @@ class FirebaseAuthMethods {
     }
   }
 
-  // EMAIL LOGIN
-  Future<void> loginWithEmail({
-    required String email,
-    required String password,
-    required BuildContext context,
-  }) async {
-    try {
-      await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      Navigator.of(context).pushReplacementNamed(UpTabBar.routeName);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        if (kDebugMode) {
-          print('No user found for that email.');
-        }
-      } else if (e.code == 'wrong-password') {
-        if (kDebugMode) {
-          print('Wrong password provided for that user.');
-        }
-      }
-      showSnackBar(context, e.message!); // Displaying the error message
+// EMAIL LOGIN
+Future<String?> loginWithEmail({
+  required String email,
+  required String password,
+  required BuildContext context,
+}) async {
+  try {
+    UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userCredential.user.uid)
+        .get();
+
+    if (userDoc.exists) {
+      return userDoc.data()?['role'];
+    } else {
+      return null;
     }
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'user-not-found') {
+      if (kDebugMode) {
+        print('No user found for that email.');
+      }
+    } else if (e.code == 'wrong-password') {
+      if (kDebugMode) {
+        print('Wrong password provided for that user.');
+      }
+    }
+    showSnackBar(context, e.message!); // Displaying the error message
+    return null;
   }
+}
 
   // EMAIL VERIFICATION
   Future<void> sendEmailVerification(BuildContext context) async {
