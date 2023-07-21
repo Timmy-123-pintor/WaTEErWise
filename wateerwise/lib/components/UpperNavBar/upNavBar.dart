@@ -10,7 +10,7 @@ import '../../screens/wBill.dart';
 import '../../screens/wLimit.dart';
 
 class UpTabBar extends StatefulWidget {
-  static const routeName = '/UpTabBar';
+  static const routeName = '/userPage';
 
   const UpTabBar({super.key});
 

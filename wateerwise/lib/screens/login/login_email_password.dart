@@ -3,9 +3,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wateerwise/components/UpperNavBar/upNavBar.dart';
 import 'package:wateerwise/services/firebase_auth_methods.dart';
 import 'package:wateerwise/widgets/custom_textfiled.dart';
+import 'package: wateerwise/admin/navTabBar.dart';
+import 'package: wateerwise/UpperNavBar/upNavBar.dart';
 
 class EmailPasswordLogin extends StatefulWidget {
   static const routeName = '/EmailPasswordLogin';
@@ -34,28 +35,37 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
     super.dispose();
   }
 
-  Future<void> loginUser() async {
-    final email = emailController.text.trim();
-    final password = passwordController.text.trim();
+Future<void> loginUser() async {
+  final email = emailController.text.trim();
+  final password = passwordController.text.trim();
 
-    try {
-      await context.read<FirebaseAuthMethods>().loginWithEmail(
-            email: email,
-            password: password,
-            context: context,
-          );  
-      Navigator.pushNamedAndRemoveUntil(context, UpTabBar.routeName, (route) => false);
-    } catch (e) {
-      // Handle login error here
-      if (kDebugMode) {
-        print('Login error: $e');
+  try {
+    String? role = await context.read<FirebaseAuthMethods>().loginWithEmail(
+      email: email,
+      password: password,
+      context: context,
+    );
+    if (role != null) {
+      if (role == 'admin') {
+        Navigator.pushNamedAndRemoveUntil(context, adminPage.routeName, (route) => false);
+      } else {
+        Navigator.pushNamedAndRemoveUntil(context, UserDashboard.routeName, (route) => false);
       }
-      // Show an error message to the user
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login Successfully!')),
-      );
+    } else {
+      // Handle error here
     }
+  } catch (e) {
+    // Handle login error here
+    if (kDebugMode) {
+      print('Login error: $e');
+    }
+    // Show an error message to the user
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Login Failed!')),
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
