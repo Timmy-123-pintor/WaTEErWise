@@ -142,6 +142,12 @@ const conText1 = TextStyle(
   color: tBlue,
 );
 
+const waterWhite = TextStyle(
+  fontSize: 40,
+  fontWeight: FontWeight.bold,
+  color: tWhite,
+);
+
 //custom widget
 class DescriptionWidget extends StatelessWidget {
   final String title;
