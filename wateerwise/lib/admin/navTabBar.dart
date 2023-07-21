@@ -8,7 +8,7 @@ import 'package:wateerwise/screens/mainpage.dart';
 import '../constant.dart';
 
 class Tabbar extends StatefulWidget {
-  static const routeName = '/adminPage';
+  static const routeName = '/Tabbar';
   const Tabbar({super.key});
 
   @override

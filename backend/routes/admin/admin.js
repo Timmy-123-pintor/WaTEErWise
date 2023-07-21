@@ -7,6 +7,7 @@ const firebase = require('firebase');
 router.get('/', customerController.getCustomerData);
 router.get('/bills', customerController.getCustomerBills);
 router.post('/limit', customerController.setWaterLimit);
+router.post('/setAdmin', adminController.setAdmin);
 
 router.post('/login', (req, res) => {
     const { email, password } = req.body;

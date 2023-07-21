@@ -1,9 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:wateerwise/components/UpperNavBar/upNavBar.dart';
 import 'package:wateerwise/utils/showSnackbar.dart';
 
 class FirebaseAuthMethods {
@@ -54,40 +54,41 @@ class FirebaseAuthMethods {
   }
 
 // EMAIL LOGIN
-Future<String?> loginWithEmail({
-  required String email,
-  required String password,
-  required BuildContext context,
-}) async {
-  try {
-    UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userCredential.user.uid)
-        .get();
+  Future<String?> loginWithEmail({
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user?.uid)
+          .get();
 
-    if (userDoc.exists) {
-      return userDoc.data()?['role'];
-    } else {
+      var data = userDoc.data();
+      if (data is Map<String, dynamic>) {
+        return data['role'] as String?;
+      } else {
+        return null;
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        if (kDebugMode) {
+          print('No user found for that email.');
+        }
+      } else if (e.code == 'wrong-password') {
+        if (kDebugMode) {
+          print('Wrong password provided for that user.');
+        }
+      }
+      showSnackBar(context, e.message!); // Displaying the error message
       return null;
     }
-  } on FirebaseAuthException catch (e) {
-    if (e.code == 'user-not-found') {
-      if (kDebugMode) {
-        print('No user found for that email.');
-      }
-    } else if (e.code == 'wrong-password') {
-      if (kDebugMode) {
-        print('Wrong password provided for that user.');
-      }
-    }
-    showSnackBar(context, e.message!); // Displaying the error message
-    return null;
   }
-}
 
   // EMAIL VERIFICATION
   Future<void> sendEmailVerification(BuildContext context) async {

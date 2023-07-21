@@ -30,6 +30,11 @@ class _TabbarState extends State<Tabbar> {
                 });
               },
               selectedItemColor: tBlue,
+              unselectedIconTheme: IconThemeData(
+                color: tBlack,
+              ),
+              unselectedItemColor: tBlack,
+              showUnselectedLabels: true,
               items: [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home_filled),
