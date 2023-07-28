@@ -1,5 +1,7 @@
 {
     "java.configuration.updateBuildConfiguration": "interactive",
     "C_Cpp.errorSquiggles": "enabled",
-    "eslint.problems.shortenToSingleLine": false
+    "eslint.problems.shortenToSingleLine": false,
+    "git.ignoreLimitWarning": true,
+    "json.schemaDownload.enable": true,
 }

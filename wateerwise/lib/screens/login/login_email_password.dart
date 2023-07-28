@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,31 +41,51 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
     final password = passwordController.text.trim();
 
     try {
-      String? role = await context.read<FirebaseAuthMethods>().loginWithEmail(
-            email: email,
-            password: password,
-            context: context,
-          );
-      if (role != null) {
-        if (role == 'admin') {
-          Navigator.pushNamedAndRemoveUntil(
-              context, Tabbar.routeName, (route) => false);
-        } else {
-          Navigator.pushNamedAndRemoveUntil(
-              context, UpTabBar.routeName, (route) => false);
+      UserCredential userCredential =
+          await Provider.of<FirebaseAuthMethods>(context, listen: false)
+              .loginWithEmail(
+        email: email,
+        password: password,
+        context: context,
+      );
+
+      // Assuming userCredential.user?.uid is not null
+      if (userCredential.user?.uid == null) {
+        if (kDebugMode) {
+          print('Failed to get user UID');
         }
+        return;
+      }
+
+      String? role =
+          await Provider.of<FirebaseAuthMethods>(context, listen: false)
+              .getUserRole(userCredential.user!.uid);
+
+      if (kDebugMode) {
+        print('Fetched user role: $role');
+      } // print the role
+
+      // Check if the widget is still mounted before using its context
+      if (!mounted) return;
+
+      if (role == 'admin') {
+        Navigator.pushNamedAndRemoveUntil(
+            context, Tabbar.routeName, (route) => false);
       } else {
-        // Handle error here
+        Navigator.pushNamedAndRemoveUntil(
+            context, UpTabBar.routeName, (route) => false);
       }
     } catch (e) {
       // Handle login error here
       if (kDebugMode) {
         print('Login error: $e');
       }
-      // Show an error message to the user
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login Failed!')),
-      );
+      // Check if the widget is still mounted before showing a SnackBar
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login Failed!')),
+        );
+      }
     }
   }
 

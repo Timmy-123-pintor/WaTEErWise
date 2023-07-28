@@ -1,10 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:waterwiseweb/Screens/utils/showSnackbar.dart';
-import 'package:waterwiseweb/components/TabBar/NavBar.dart';
 
 class FirebaseAuthMethods {
   final FirebaseAuth _auth;
@@ -26,45 +26,83 @@ class FirebaseAuthMethods {
   // KNOW MORE ABOUT THEM HERE: https://firebase.flutter.dev/docs/auth/start#auth-state
 
   // EMAIL SIGN UP
-  Future<void> signUpWithEmail({
-    required String email,
-    required String password,
-    required BuildContext context,
-  }) async {
-    try {
-      await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      await sendEmailVerification(context);
-    } on FirebaseAuthException catch (e) {
-      // if you want to display your own custom error message
-      if (e.code == 'weak-password') {
-        if (kDebugMode) {
-          print('The password provided is too weak.');
-        }
-      } else if (e.code == 'email-already-in-use') {
-        if (kDebugMode) {
-          print('The account already exists for that email.');
-        }
-      }
-      showSnackBar(
-          context, e.message!); // Displaying the usual firebase error message
-    }
-  }
+Future<void> signUpWithEmail({
+  required String email,
+  required String password,
+  required String firstName,
+  required String lastName,
+  required BuildContext context,
+}) async {
+  try {
+    UserCredential userCredential =
+        await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
 
-  // EMAIL LOGIN
-  Future<void> loginWithEmail({
+    // Ensure the user is not null
+    if (userCredential.user == null) {
+      print('User is null after creation');
+      return;
+    }
+
+    // Add the user data to Firestore
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userCredential.user!.uid)
+        .set({
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'role': 'user', // Directly set the role to 'user'
+    }).then((value) => print("User Added"))
+      .catchError((error) => print("Failed to add user: $error"));
+
+    User? user = _auth.currentUser;
+
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+      showSnackBar(context, 'Email verification sent!');
+    }
+  } on FirebaseAuthException catch (e) {
+    // if you want to display your own custom error message
+    if (e.code == 'weak-password') {
+      if (kDebugMode) {
+        print('The password provided is too weak.');
+      }
+    } else if (e.code == 'email-already-in-use') {
+      if (kDebugMode) {
+        print('The account already exists for that email.');
+      }
+    }
+    showSnackBar(
+        context, e.message!); // Displaying the usual firebase error message
+  }
+}
+
+
+// EMAIL LOGIN
+  Future<String?> loginWithEmail({
     required String email,
     required String password,
     required BuildContext context,
   }) async {
     try {
-      await _auth.signInWithEmailAndPassword(
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      Navigator.of(context).pushReplacementNamed(Tabbar.routeName);
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user?.uid)
+          .get();
+
+      var data = userDoc.data();
+      if (data is Map<String, dynamic>) {
+        return data['role'] as String?;
+      } else {
+        return null;
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         if (kDebugMode) {
@@ -76,6 +114,7 @@ class FirebaseAuthMethods {
         }
       }
       showSnackBar(context, e.message!); // Displaying the error message
+      return null;
     }
   }
 
@@ -86,6 +125,18 @@ class FirebaseAuthMethods {
       showSnackBar(context, 'Email verification sent!');
     } on FirebaseAuthException catch (e) {
       showSnackBar(context, e.message!); // Display error message
+    }
+  }
+
+  // GET USER ROLE
+  Future<String?> getUserRole(String uid) async {
+    DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    var data = userDoc.data();
+    if (data is Map<String, dynamic>) {
+      return data['role'] as String?;
+    } else {
+      return null;
     }
   }
 

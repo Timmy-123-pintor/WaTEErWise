@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:waterwiseweb/Screens/login_admin/login_admin_screen.dart';
-import 'package:waterwiseweb/Screens/login_admin/signup_admin_screen.dart';
 import 'package:waterwiseweb/Screens/services/firebase_auth_methods.dart';
 import 'package:waterwiseweb/components/TabBar/NavBar.dart';
 import 'package:waterwiseweb/constants/cons.dart';
@@ -40,7 +39,6 @@ class MyApp extends StatelessWidget {
         ),
         home: const MyAppHome(),
         routes: {
-          EmailPasswordSignup.routeName: (context) => const EmailPasswordSignup(),
           EmailPasswordLogin.routeName: (context) => const EmailPasswordLogin(),
         },
       ),
