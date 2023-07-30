@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:wateerwise/screens/login/login_email_password.dart';
 import 'package:wateerwise/services/firebase_auth_methods.dart';
 
 import '../../constant.dart';
@@ -181,6 +182,12 @@ class AccounntInfo extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       context.read<FirebaseAuthMethods>().signOut(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EmailPasswordLogin(),
+                        ),
+                      );
                     },
                     child: Text(
                       'Logout',

@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:waterwiseweb/Screens/services/firebase_auth_methods.dart';
-import 'package:waterwiseweb/Screens/widgets/custom_textfiled.dart';
 import 'package:waterwiseweb/components/TabBar/NavBar.dart';
 
 class EmailPasswordLogin extends StatefulWidget {
@@ -19,6 +18,7 @@ class EmailPasswordLogin extends StatefulWidget {
 class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
   late TextEditingController emailController;
   late TextEditingController passwordController;
+  bool _obscureText = true;
 
   @override
   void initState() {
@@ -43,8 +43,9 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
             email: email,
             password: password,
             context: context,
-          );  
-      Navigator.pushNamedAndRemoveUntil(context, Tabbar.routeName, (route) => false);
+          );
+      Navigator.pushNamedAndRemoveUntil(
+          context, Tabbar.routeName, (route) => false);
     } catch (e) {
       // Handle login error here
       if (kDebugMode) {
@@ -70,17 +71,33 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
           SizedBox(height: MediaQuery.of(context).size.height * 0.08),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
-            child: CustomTextField(
+            child: TextField(
               controller: emailController,
-              hintText: 'Enter your email',
+              decoration: const InputDecoration(
+                labelText: 'Enter your email',
+                prefixIcon: Icon(Icons.email),
+              ),
             ),
           ),
           const SizedBox(height: 20),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
-            child: CustomTextField(
+            child: TextField(
               controller: passwordController,
-              hintText: 'Enter your password',
+              obscureText: _obscureText,
+              decoration: InputDecoration(
+                  labelText: 'Enter your password',
+                  prefixIcon: const Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    icon: _obscureText
+                        ? const Icon(Icons.visibility_off)
+                        : const Icon(Icons.visibility),
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                  )),
             ),
           ),
           const SizedBox(height: 40),

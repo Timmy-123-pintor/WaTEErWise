@@ -26,7 +26,6 @@ class _TabbarState extends State<Tabbar> {
     Navigator.of(context).pushNamed('/EmailPasswordLogin');
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,9 +33,13 @@ class _TabbarState extends State<Tabbar> {
           ? BottomNavigationBar(
               currentIndex: _selectedTab,
               onTap: (index) {
-                setState(() {
-                  this._selectedTab = index;
-                });
+                if (index == 4) {
+                  logout();
+                } else {
+                  setState(() {
+                    this._selectedTab = index;
+                  });
+                }
               },
               selectedItemColor: tBlue,
               unselectedIconTheme: IconThemeData(
@@ -61,7 +64,7 @@ class _TabbarState extends State<Tabbar> {
                   icon: Icon(Icons.person_add),
                   label: "Add user",
                 ),
-                 BottomNavigationBarItem(
+                BottomNavigationBarItem(
                   icon: Icon(Icons.logout),
                   label: "Logout",
                 ),
@@ -90,12 +93,12 @@ class _TabbarState extends State<Tabbar> {
                 },
                 child: NavigationRail(
                   onDestinationSelected: (int index) {
-                   if(index == 4) {
+                    if (index == 4) {
                       logout();
                     } else {
                       setState(() {
-                      _selectedTab = index;
-                    });
+                        _selectedTab = index;
+                      });
                     }
                   },
                   extended: extended,
@@ -123,7 +126,7 @@ class _TabbarState extends State<Tabbar> {
                       icon: Icon(Icons.person_add),
                       label: Text("Add User"),
                     ),
-                     NavigationRailDestination(
+                    NavigationRailDestination(
                       icon: Icon(Icons.logout),
                       label: Text("Logout"),
                     ),

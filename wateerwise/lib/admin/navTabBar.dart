@@ -35,9 +35,13 @@ class _TabbarState extends State<Tabbar> {
           ? BottomNavigationBar(
               currentIndex: _selectedTab,
               onTap: (index) {
-                setState(() {
-                  this._selectedTab = index;
-                });
+                if (index == 4) {
+                  logout();
+                } else {
+                  setState(() {
+                    this._selectedTab = index;
+                  });
+                }
               },
               selectedItemColor: tBlue,
               unselectedItemColor: tBlack,
