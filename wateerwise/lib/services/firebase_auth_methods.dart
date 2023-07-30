@@ -92,11 +92,10 @@ class FirebaseAuthMethods {
     required BuildContext context,
   }) async {
     try {
-      UserCredential userCredential =
-          await _auth.signInWithEmailAndPassword(email: email, password: password);
-      
-      return userCredential;
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
 
+      return userCredential;
     } on FirebaseAuthException catch (e) {
       // Handle login error here
       if (e.code == 'user-not-found') {
@@ -112,11 +111,10 @@ class FirebaseAuthMethods {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login Failed!')),
       );
-      
+
       rethrow; // Re-throw the exception to be caught by the calling method
     }
   }
-
 
   // EMAIL VERIFICATION
   Future<void> sendEmailVerification(BuildContext context) async {
@@ -134,10 +132,9 @@ class FirebaseAuthMethods {
         await FirebaseFirestore.instance.collection('users').doc(uid).get();
     var data = userDoc.data();
     if (data is Map<String, dynamic>) {
-      return data['role'] as String? ??
-          'user'; 
+      return data['role'] as String? ?? 'user';
     } else {
-      return 'user'; 
+      return 'user';
     }
   }
 
