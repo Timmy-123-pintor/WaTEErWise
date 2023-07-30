@@ -20,11 +20,12 @@ class _TabbarState extends State<Tabbar> {
   int _selectedTab = 0;
   bool extended = false;
 
-   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void logout() async {
     await _auth.signOut();
-    Navigator.of(context).pushNamedAndRemoveUntil('/EmailPasswordLogin', (route) => true);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/EmailPasswordLogin', (route) => true);
   }
 
   @override
@@ -39,6 +40,7 @@ class _TabbarState extends State<Tabbar> {
                 });
               },
               selectedItemColor: tBlue,
+              unselectedItemColor: tBlack,
               items: [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home_filled),
@@ -56,7 +58,7 @@ class _TabbarState extends State<Tabbar> {
                   icon: Icon(Icons.person_add),
                   label: "Add user",
                 ),
-                 BottomNavigationBarItem(
+                BottomNavigationBarItem(
                   icon: Icon(Icons.logout),
                   label: "Logout",
                 ),
@@ -85,12 +87,12 @@ class _TabbarState extends State<Tabbar> {
                 },
                 child: NavigationRail(
                   onDestinationSelected: (int index) {
-                    if(index == 4) {
+                    if (index == 4) {
                       logout();
                     } else {
                       setState(() {
-                      _selectedTab = index;
-                    });
+                        _selectedTab = index;
+                      });
                     }
                   },
                   extended: extended,
@@ -118,7 +120,7 @@ class _TabbarState extends State<Tabbar> {
                       icon: Icon(Icons.person_add),
                       label: Text("Add User"),
                     ),
-                     NavigationRailDestination(
+                    NavigationRailDestination(
                       icon: Icon(Icons.logout),
                       label: Text("Logout"),
                     ),
