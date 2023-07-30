@@ -1,4 +1,5 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, unnecessary_this, file_names
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, unnecessary_this, file_names, use_build_context_synchronously
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:waterwiseweb/Screens/addUser.dart';
 import 'package:waterwiseweb/Screens/bill.dart';
@@ -7,7 +8,7 @@ import 'package:waterwiseweb/Screens/mainpage.dart';
 import 'package:waterwiseweb/constants/cons.dart';
 
 class Tabbar extends StatefulWidget {
-  static const routeName = '/Tabbar';
+  static const String routeName = '/Tabbar';
   const Tabbar({super.key});
 
   @override
@@ -17,6 +18,14 @@ class Tabbar extends StatefulWidget {
 class _TabbarState extends State<Tabbar> {
   int _selectedTab = 0;
   bool extended = false;
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  void logout() async {
+    await _auth.signOut();
+    Navigator.of(context).pushNamed('/EmailPasswordLogin');
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +61,10 @@ class _TabbarState extends State<Tabbar> {
                   icon: Icon(Icons.person_add),
                   label: "Add user",
                 ),
+                 BottomNavigationBarItem(
+                  icon: Icon(Icons.logout),
+                  label: "Logout",
+                ),
               ],
             )
           : null,
@@ -77,9 +90,13 @@ class _TabbarState extends State<Tabbar> {
                 },
                 child: NavigationRail(
                   onDestinationSelected: (int index) {
-                    setState(() {
+                   if(index == 4) {
+                      logout();
+                    } else {
+                      setState(() {
                       _selectedTab = index;
                     });
+                    }
                   },
                   extended: extended,
                   selectedIndex: _selectedTab,
@@ -105,6 +122,10 @@ class _TabbarState extends State<Tabbar> {
                     NavigationRailDestination(
                       icon: Icon(Icons.person_add),
                       label: Text("Add User"),
+                    ),
+                     NavigationRailDestination(
+                      icon: Icon(Icons.logout),
+                      label: Text("Logout"),
                     ),
                   ],
                 ),

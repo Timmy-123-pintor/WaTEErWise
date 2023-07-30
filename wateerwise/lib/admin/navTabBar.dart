@@ -1,4 +1,5 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, unnecessary_this, file_names
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, unnecessary_this, file_names, use_build_context_synchronously
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wateerwise/admin/bill.dart';
 import 'package:wateerwise/admin/devicesMob.dart';
@@ -18,6 +19,13 @@ class Tabbar extends StatefulWidget {
 class _TabbarState extends State<Tabbar> {
   int _selectedTab = 0;
   bool extended = false;
+
+   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  void logout() async {
+    await _auth.signOut();
+    Navigator.of(context).pushNamedAndRemoveUntil('/EmailPasswordLogin', (route) => true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +56,10 @@ class _TabbarState extends State<Tabbar> {
                   icon: Icon(Icons.person_add),
                   label: "Add user",
                 ),
+                 BottomNavigationBarItem(
+                  icon: Icon(Icons.logout),
+                  label: "Logout",
+                ),
               ],
             )
           : null,
@@ -73,9 +85,13 @@ class _TabbarState extends State<Tabbar> {
                 },
                 child: NavigationRail(
                   onDestinationSelected: (int index) {
-                    setState(() {
+                    if(index == 4) {
+                      logout();
+                    } else {
+                      setState(() {
                       _selectedTab = index;
                     });
+                    }
                   },
                   extended: extended,
                   selectedIndex: _selectedTab,
@@ -101,6 +117,10 @@ class _TabbarState extends State<Tabbar> {
                     NavigationRailDestination(
                       icon: Icon(Icons.person_add),
                       label: Text("Add User"),
+                    ),
+                     NavigationRailDestination(
+                      icon: Icon(Icons.logout),
+                      label: Text("Logout"),
                     ),
                   ],
                 ),

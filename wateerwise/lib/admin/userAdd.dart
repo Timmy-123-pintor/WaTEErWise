@@ -8,7 +8,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:wateerwise/constant.dart';
 import 'package:http/http.dart' as http;
-import 'package:wateerwise/services/firebase_auth_methods.dart'; 
+import 'package:wateerwise/services/firebase_auth_methods.dart';
+
+import 'navTabBar.dart';
 
 class AddUser extends StatefulWidget {
   const AddUser({super.key});
@@ -18,7 +20,6 @@ class AddUser extends StatefulWidget {
 }
 
 class _AddUserState extends State<AddUser> {
-
   // Add controllers for your TextFields
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -99,8 +100,7 @@ class _AddUserState extends State<AddUser> {
                             color: tBlack,
                             icon: const Icon(Icons.close),
                             onPressed: () {
-                              Navigator.of(context)
-                                  .pop(); // Close the screen or dismiss the dialog
+                              Navigator.of(context).pushNamed(Tabbar.routeName);
                             },
                           ),
                         ),

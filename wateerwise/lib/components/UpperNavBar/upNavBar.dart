@@ -72,17 +72,6 @@ class _UpTabBarState extends State<UpTabBar>
                       ),
                     ),
                     const Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        // Handle logout action
-                      },
-                      child: Image.asset(
-                        'assets/images/logout.png',
-                        width: 30,
-                        height: 30,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
                   ],
                 ),
               ),
