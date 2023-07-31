@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:waterwiseweb/Screens/services/firebase_auth_methods.dart';
+import 'package:waterwiseweb/components/TabBar/NavBar.dart';
 import 'package:waterwiseweb/constants/cons.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,7 +19,6 @@ class AddUser extends StatefulWidget {
 }
 
 class _AddUserState extends State<AddUser> {
-
   // Add controllers for your TextFields
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -99,8 +99,12 @@ class _AddUserState extends State<AddUser> {
                             color: tBlack,
                             icon: const Icon(Icons.close),
                             onPressed: () {
-                              Navigator.of(context)
-                                  .pop(); // Close the screen or dismiss the dialog
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const Tabbar(),
+                                ),
+                              );
                             },
                           ),
                         ),

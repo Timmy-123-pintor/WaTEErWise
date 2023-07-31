@@ -11,6 +11,7 @@ const tGray = Color.fromARGB(255, 219, 219, 219);
 const tGreen = Color(0XFF3F8B35);
 const tBlackG = Color.fromARGB(255, 66, 66, 66);
 const tOrange = Color(0XFFFFA500);
+const tRed = Color(0xFFFF9494);
 
 // WITH OPACITY
 const tBlackO = Color.fromRGBO(58, 58, 58, 0.401);
@@ -41,6 +42,12 @@ const waterInText = TextStyle(
   fontSize: 10,
   fontWeight: FontWeight.w500,
   color: tBlue,
+);
+
+const error = TextStyle(
+  fontSize: 10,
+  fontWeight: FontWeight.w500,
+  color: tRed,
 );
 
 const waterInTextBold = TextStyle(

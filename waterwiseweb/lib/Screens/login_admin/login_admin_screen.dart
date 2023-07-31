@@ -7,7 +7,7 @@ import 'package:waterwiseweb/Screens/services/firebase_auth_methods.dart';
 import 'package:waterwiseweb/components/TabBar/NavBar.dart';
 
 class EmailPasswordLogin extends StatefulWidget {
-  static const routeName = '/EmailPasswordLogin';
+  static const routeName = '/EmailPasswordLoginWM';
   const EmailPasswordLogin({Key? key}) : super(key: key);
 
   @override

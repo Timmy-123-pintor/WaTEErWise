@@ -6,6 +6,7 @@ import 'package:waterwiseweb/Screens/bill.dart';
 import 'package:waterwiseweb/Screens/devices.dart';
 import 'package:waterwiseweb/Screens/mainpage.dart';
 import 'package:waterwiseweb/constants/cons.dart';
+import 'package:waterwiseweb/main.dart';
 
 class Tabbar extends StatefulWidget {
   static const String routeName = '/Tabbar';
@@ -23,7 +24,12 @@ class _TabbarState extends State<Tabbar> {
 
   void logout() async {
     await _auth.signOut();
-    Navigator.of(context).pushNamed('/EmailPasswordLogin');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyApp(),
+      ),
+    );
   }
 
   @override
