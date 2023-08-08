@@ -1,108 +1,84 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:waterwiseweb/Screens/utils/showSnackbar.dart';
+import 'package:waterwiseweb/models/user_model.dart';
 
 class FirebaseAuthMethods {
   final FirebaseAuth _auth;
   FirebaseAuthMethods(this._auth);
 
-  // FOR EVERY FUNCTION HERE
-  // POP THE ROUTE USING: Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-
-  // GET USER DATA
-  // using null check operator since this method should be called only
-  // when the user is logged in
   User get user => _auth.currentUser!;
 
-  // STATE PERSISTENCE STREAM
   Stream<User?> get authState => FirebaseAuth.instance.authStateChanges();
-  // OTHER WAYS (depends on use case):
-  // Stream get authState => FirebaseAuth.instance.userChanges();
-  // Stream get authState => FirebaseAuth.instance.idTokenChanges();
-  // KNOW MORE ABOUT THEM HERE: https://firebase.flutter.dev/docs/auth/start#auth-state
 
   // EMAIL SIGN UP
-Future<void> signUpWithEmail({
-  required String email,
-  required String password,
-  required String firstName,
-  required String lastName,
-  required BuildContext context,
-}) async {
-  try {
-    UserCredential userCredential =
-        await _auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+  Future<void> signUpWithEmail({
+    required String email,
+    required String password,
+    required String firstName,
+    required String lastName,
+    required BuildContext context,
+  }) async {
+    try {
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-    // Ensure the user is not null
-    if (userCredential.user == null) {
-      print('User is null after creation');
-      return;
-    }
-
-    // Add the user data to Firestore
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userCredential.user!.uid)
-        .set({
-      'firstName': firstName,
-      'lastName': lastName,
-      'email': email,
-      'role': 'user', // Directly set the role to 'user'
-    }).then((value) => print("User Added"))
-      .catchError((error) => print("Failed to add user: $error"));
-
-    User? user = _auth.currentUser;
-
-    if (user != null && !user.emailVerified) {
-      await user.sendEmailVerification();
-      showSnackBar(context, 'Email verification sent!');
-    }
-  } on FirebaseAuthException catch (e) {
-    // if you want to display your own custom error message
-    if (e.code == 'weak-password') {
-      if (kDebugMode) {
-        print('The password provided is too weak.');
+      if (userCredential.user == null) {
+        return;
       }
-    } else if (e.code == 'email-already-in-use') {
-      if (kDebugMode) {
-        print('The account already exists for that email.');
+
+      // Add the user data to Firestore
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set({
+            'firstName': firstName,
+            'lastName': lastName,
+            'email': email,
+            'role': 'user', 
+          })
+          .then((value) => print("User Added"))
+          .catchError((error) => print("Failed to add user: $error"));
+
+      User? user = _auth.currentUser;
+
+      if (user != null && !user.emailVerified) {
+        await user.sendEmailVerification();
+        showSnackBar(context, 'Email verification sent!');
       }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        if (kDebugMode) {
+          print('The password provided is too weak.');
+        }
+      } else if (e.code == 'email-already-in-use') {
+        if (kDebugMode) {
+          print('The account already exists for that email.');
+        }
+      }
+      showSnackBar(
+          context, e.message!);
     }
-    showSnackBar(
-        context, e.message!); // Displaying the usual firebase error message
   }
-}
 
-
-// EMAIL LOGIN
-  Future<String?> loginWithEmail({
+  // EMAIL LOGIN
+  Future<UserCredential> loginWithEmail({
     required String email,
     required String password,
     required BuildContext context,
   }) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userCredential.user?.uid)
-          .get();
+          email: email, password: password);
 
-      var data = userDoc.data();
-      if (data is Map<String, dynamic>) {
-        return data['role'] as String?;
-      } else {
-        return null;
-      }
+      return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         if (kDebugMode) {
@@ -113,8 +89,11 @@ Future<void> signUpWithEmail({
           print('Wrong password provided for that user.');
         }
       }
-      showSnackBar(context, e.message!); // Displaying the error message
-      return null;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login Failed!')),
+      );
+      
+      rethrow; // Re-throw the exception to be caught by the calling method
     }
   }
 
@@ -124,7 +103,7 @@ Future<void> signUpWithEmail({
       _auth.currentUser!.sendEmailVerification();
       showSnackBar(context, 'Email verification sent!');
     } on FirebaseAuthException catch (e) {
-      showSnackBar(context, e.message!); // Display error message
+      showSnackBar(context, e.message!); 
     }
   }
 
@@ -134,19 +113,45 @@ Future<void> signUpWithEmail({
         await FirebaseFirestore.instance.collection('users').doc(uid).get();
     var data = userDoc.data();
     if (data is Map<String, dynamic>) {
-      return data['role'] as String?;
+      return data['role'] as String? ?? 'user';
     } else {
-      return null;
+      return 'user';
     }
+  }
+
+  // FETCH ALL USERS
+  Future<List<UserModel>> fetchAllUsers() async {
+    List<UserModel> users = [];
+    var userDocs = await FirebaseFirestore.instance.collection('users').get();
+
+    if (kDebugMode) {
+      print('Fetched ${userDocs.docs.length} user(s)');
+    } 
+
+    for (var userDoc in userDocs.docs) {
+      var data = userDoc.data();
+      if (kDebugMode) {
+        print('Data for user ${userDoc.id}: $data');
+      } 
+      users.add(
+        UserModel(
+          uid: userDoc.id,
+          email: data['email'] as String? ?? '',
+          role: data['role'] as String? ?? 'user',
+          firstName: data['firstName'] as String? ?? '',
+          lastName: data['lastName'] as String? ?? '',
+        ),
+      );
+        }
+    return users;
   }
 
   // SIGN OUT
   Future<void> signOut(BuildContext context) async {
     try {
       await _auth.signOut();
-      // Do something after successful sign-out (e.g., navigate to login screen)
     } on FirebaseAuthException catch (e) {
-      showSnackBar(context, e.message!); // Displaying the error message
+      showSnackBar(context, e.message!); 
     }
   }
 

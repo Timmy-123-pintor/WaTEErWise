@@ -1,10 +1,10 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, unnecessary_this, file_names, use_build_context_synchronously
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:wateerwise/admin/adminpage.dart';
 import 'package:wateerwise/admin/bill.dart';
 import 'package:wateerwise/admin/devicesMob.dart';
 import 'package:wateerwise/admin/userAdd.dart';
-import 'package:wateerwise/screens/mainpage.dart';
 
 import '../constant.dart';
 
@@ -137,7 +137,7 @@ class _TabbarState extends State<Tabbar> {
               children: [
                 renderView(
                   0,
-                  const MainPage(),
+                  const AllUsersScreen(),
                 ),
                 renderView(
                   1,

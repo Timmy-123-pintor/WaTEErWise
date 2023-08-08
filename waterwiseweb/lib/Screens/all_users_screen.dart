@@ -3,8 +3,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:wateerwise/models/user_model.dart';
-import 'package:wateerwise/services/firebase_auth_methods.dart';
+import 'package:waterwiseweb/Screens/services/firebase_auth_methods.dart';
+import 'package:waterwiseweb/models/user_model.dart';
 
 extension StringExtension on String {
   String capitalize() {

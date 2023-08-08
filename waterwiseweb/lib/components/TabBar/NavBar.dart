@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:waterwiseweb/Screens/addUser.dart';
 import 'package:waterwiseweb/Screens/bill.dart';
 import 'package:waterwiseweb/Screens/devices.dart';
-import 'package:waterwiseweb/Screens/mainpage.dart';
+import 'package:waterwiseweb/Screens/all_users_screen.dart';
 import 'package:waterwiseweb/constants/cons.dart';
-import 'package:waterwiseweb/main.dart';
-
 class Tabbar extends StatefulWidget {
-  static const String routeName = '/Tabbar';
+  static const routeName = '/Tabbar';
   const Tabbar({super.key});
 
   @override
@@ -24,13 +22,9 @@ class _TabbarState extends State<Tabbar> {
 
   void logout() async {
     await _auth.signOut();
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MyApp(),
-      ),
-    );
+    Navigator.of(context).pushNamed('/EmailPasswordLogin');
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +64,7 @@ class _TabbarState extends State<Tabbar> {
                   icon: Icon(Icons.person_add),
                   label: "Add user",
                 ),
-                BottomNavigationBarItem(
+                 BottomNavigationBarItem(
                   icon: Icon(Icons.logout),
                   label: "Logout",
                 ),
@@ -99,12 +93,12 @@ class _TabbarState extends State<Tabbar> {
                 },
                 child: NavigationRail(
                   onDestinationSelected: (int index) {
-                    if (index == 4) {
+                   if(index == 4) {
                       logout();
                     } else {
                       setState(() {
-                        _selectedTab = index;
-                      });
+                      _selectedTab = index;
+                    });
                     }
                   },
                   extended: extended,
@@ -132,7 +126,7 @@ class _TabbarState extends State<Tabbar> {
                       icon: Icon(Icons.person_add),
                       label: Text("Add User"),
                     ),
-                    NavigationRailDestination(
+                     NavigationRailDestination(
                       icon: Icon(Icons.logout),
                       label: Text("Logout"),
                     ),
@@ -145,7 +139,7 @@ class _TabbarState extends State<Tabbar> {
               children: [
                 renderView(
                   0,
-                  const MainPage(),
+                  const AllUsersScreen(),
                 ),
                 renderView(
                   1,

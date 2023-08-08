@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import setAdminRole from '../../controllers/admin/adminController.js';
+import { setAdminRole, getAllUsers } from '../../controllers/admin/adminController.js';
 import { getCustomerData, getCustomerBills, setWaterLimit } from '../../controllers/customer/customerController.js';
 import { authMiddleware, checkRole } from '../../middleware/authMiddleware.js';
 
@@ -9,6 +9,7 @@ router.get('/', authMiddleware, checkRole('admin'), getCustomerData);
 router.get('/bills/:userId', authMiddleware, getCustomerBills); // Include the userId in the route
 router.post('/limit/:userId', authMiddleware, setWaterLimit); // Include the userId in the route
 router.post('/setAdmin', authMiddleware, checkRole('admin'), setAdminRole);
+router.get('/users', authMiddleware, checkRole('admin'), getAllUsers);
 
 router.post('/login', (req, res) => {
     const { email, password } = req.body;
