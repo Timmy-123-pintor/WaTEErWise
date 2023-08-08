@@ -40,6 +40,13 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please input something!')),
+      );
+      return;
+    }
+
     try {
       UserCredential userCredential =
           await Provider.of<FirebaseAuthMethods>(context, listen: false)
@@ -49,7 +56,6 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
         context: context,
       );
 
-      // Assuming userCredential.user?.uid is not null
       if (userCredential.user?.uid == null) {
         if (kDebugMode) {
           print('Failed to get user UID');
@@ -63,10 +69,11 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
 
       if (kDebugMode) {
         print('Fetched user role: $role');
-      } // print the role
+      }
 
-      // Check if the widget is still mounted before using its context
-      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login successful!')),
+      );
 
       if (role == 'admin') {
         Navigator.pushNamedAndRemoveUntil(
@@ -76,16 +83,14 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
             context, UpTabBar.routeName, (route) => false);
       }
     } catch (e) {
-      // Handle login error here
       if (kDebugMode) {
         print('Login error: $e');
       }
-      // Check if the widget is still mounted before showing a SnackBar
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Login Failed!')),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content:
+                Text('Wrong email or password. Try again.')),
+      );
     }
   }
 

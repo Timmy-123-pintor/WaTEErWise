@@ -6,6 +6,7 @@ import 'package:wateerwise/admin/navTabBar.dart';
 import 'package:wateerwise/components/UpperNavBar/upNavBar.dart';
 import 'package:wateerwise/firebase_options.dart';
 import 'package:wateerwise/screens/login/login_email_password.dart';
+import 'package:wateerwise/screens/splashscreen/splash_screen.dart';
 import 'package:wateerwise/services/firebase_auth_methods.dart';
 
 void main() async {
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const AuthWrapper(),
+        home: const SplashScreen(),
         routes: {
           EmailPasswordLogin.routeName: (context) => const EmailPasswordLogin(),
           Tabbar.routeName: (context) => const Tabbar(),
@@ -89,7 +90,13 @@ class _AuthWrapperState extends State<AuthWrapper> {
               return const UpTabBar();
             }
           } else {
-            return const CircularProgressIndicator(); // Show a loading indicator while waiting
+            return const Center(
+              child: SizedBox(
+                width: 50,
+                height: 50,
+                child: CircularProgressIndicator(),
+              ),
+            );
           }
         },
       );

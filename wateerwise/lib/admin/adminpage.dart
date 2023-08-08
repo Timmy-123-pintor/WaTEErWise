@@ -1,7 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wateerwise/models/user_model.dart';
 import 'package:wateerwise/services/firebase_auth_methods.dart';
@@ -30,45 +29,70 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
     _futureUsers = _authMethods.fetchAllUsers();
   }
 
+  void _showUserDetails(UserModel user) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('User Details'),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text('Full Name: ${user.fullName}'),
+              Text('Email: ${user.email}'),
+              Text('Role: ${user.role.capitalize()}'),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: FutureBuilder<List<UserModel>>(
-      future: _futureUsers,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          List<UserModel> nonAdminUsers = snapshot.data!
-              .where((user) => user.role.toLowerCase() != 'admin')
-              .toList();
-          return ListView.builder(
-            itemCount: nonAdminUsers.length,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  // Handle the tap event here
-                  if (kDebugMode) {
-                    print('User pressed: ${nonAdminUsers[index].fullName}');
-                  }
-                },
-                child: Card(
-                  margin: const EdgeInsets.all(8.0),
-                  child: ListTile(
-                    title: Text(nonAdminUsers[index].fullName),
-                    subtitle: Text(
-                      'Role: ${nonAdminUsers[index].role.capitalize()},\nEmail: ${nonAdminUsers[index].email}',
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder<List<UserModel>>(
+        future: _futureUsers,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<UserModel> nonAdminUsers = snapshot.data!
+                .where((user) => user.role.toLowerCase() != 'admin')
+                .toList();
+            return ListView.builder(
+              itemCount: nonAdminUsers.length,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    // Show user details dialog when tapped
+                    _showUserDetails(nonAdminUsers[index]);
+                  },
+                  child: Card(
+                    margin: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                      title: Text(nonAdminUsers[index].fullName),
+                      subtitle: Text(
+                        'Role: ${nonAdminUsers[index].role.capitalize()},\nEmail: ${nonAdminUsers[index].email}',
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          );
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
 
-        return const CircularProgressIndicator();
-      },
-    ),
-  );
- }
+          return const CircularProgressIndicator();
+        },
+      ),
+    );
+  }
 }
