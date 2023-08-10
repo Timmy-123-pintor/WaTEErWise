@@ -29,5 +29,5 @@ const setAdminClaim = async (email) => {
   console.log(`${email} is now an admin`);
 };
 
-// Replace this with the email of the user you want to make an admin
+// Set an admin email :)
 setAdminClaim('waterwiseplus.20@gmail.com').catch(console.error);

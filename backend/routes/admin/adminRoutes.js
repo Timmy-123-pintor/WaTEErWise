@@ -6,8 +6,8 @@ import { authMiddleware, checkRole } from '../../middleware/authMiddleware.js';
 const router = Router();
 
 router.get('/', authMiddleware, checkRole('admin'), getCustomerData);
-router.get('/bills/:userId', authMiddleware, getCustomerBills); // Include the userId in the route
-router.post('/limit/:userId', authMiddleware, setWaterLimit); // Include the userId in the route
+router.get('/bills/:userId', authMiddleware, getCustomerBills); 
+router.post('/limit/:userId', authMiddleware, setWaterLimit); 
 router.post('/setAdmin', authMiddleware, checkRole('admin'), setAdminRole);
 router.get('/users', authMiddleware, checkRole('admin'), getAllUsers);
 
@@ -18,10 +18,8 @@ router.post('/login', (req, res) => {
     .then((userCredential) => {
         const user = userCredential.user;
 
-        // Fetch additional user info from Firebase
         auth().getUser(user.uid)
         .then((userRecord) => {
-            // Check if user has admin role
             if (userRecord.customClaims && userRecord.customClaims.role === 'admin') {
                 res.json({ status: "success", message: "Admin logged in", data: user });
             } else {

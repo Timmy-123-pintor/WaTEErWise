@@ -5,10 +5,8 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:wateerwise/constant.dart';
 import 'package:http/http.dart' as http;
-import 'package:wateerwise/services/firebase_auth_methods.dart';
 
 import 'navTabBar.dart';
 
@@ -187,37 +185,35 @@ class _AddUserState extends State<AddUser> {
                                   'lastName': lastName,
                                   'email': email,
                                   'password': password,
-                                  'isAdmin':
-                                      'false', // set 'isAdmin' directly as 'false'
                                 }),
                               );
 
-                              if (response.statusCode == 200) {
-                                try {
-                                  await context
-                                      .read<FirebaseAuthMethods>()
-                                      .signUpWithEmail(
-                                        email: email,
-                                        password: password,
-                                        firstName: firstName,
-                                        lastName: lastName,
-                                        context: context,
-                                      );
-                                  Navigator.of(context).pop();
-                                } catch (e) {
-                                  // Handle signup error
-                                  if (kDebugMode) {
-                                    print(e);
-                                  }
-                                }
+                              if (response.statusCode == 201) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Registration successful!'),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
                               } else {
-                                // Handle backend server error
-                                if (kDebugMode) {
-                                  print('Server error: ${response.statusCode}');
-                                }
+                                var responseJson = jsonDecode(response.body);
+                                String errorMessage = responseJson['message'];
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(errorMessage),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
                               }
                             } catch (e) {
                               // Handle network error
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content:
+                                      Text('Network error. Please try again.'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
                               if (kDebugMode) {
                                 print('Network error: $e');
                               }
@@ -225,17 +221,17 @@ class _AddUserState extends State<AddUser> {
                           },
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
-                            backgroundColor: Colors.blue, // Set the text color
+                            backgroundColor: Colors.blue, 
                             minimumSize:
-                                const Size(50, 50), // Set the button size
+                                const Size(50, 50), 
                             padding:
-                                const EdgeInsets.all(10), // Set the padding
+                                const EdgeInsets.all(10), 
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
-                                  10), // Set the border radius
+                                  10),
                             ),
                           ),
-                          child: const Text('Register'), // Button text
+                          child: const Text('Register'), 
                         ),
                       ],
                     ),

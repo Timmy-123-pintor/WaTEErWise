@@ -1,4 +1,3 @@
-// deviceServices.js
 import firebaseAdmin from 'firebase-admin';
 
 const { database } = firebaseAdmin;
@@ -20,7 +19,6 @@ export async function calculateCurrentUsage(id) {
   const snapshot = await database().ref('/devices/' + id).once('value');
   const deviceData = snapshot.val();
 
-  // Fictitious calculation, replace this with actual logic.
   const usage = deviceData.settings * 100;
 
   return usage;
