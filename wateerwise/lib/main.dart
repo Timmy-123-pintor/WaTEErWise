@@ -80,9 +80,12 @@ class _AuthWrapperState extends State<AuthWrapper> {
     final firebaseUser = context.watch<User?>();
     if (firebaseUser != null) {
       return FutureBuilder<String?>(
-        future:
-            context.read<FirebaseAuthMethods>().getUserRole(firebaseUser.uid),
+        future: userRoleFuture, 
         builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.data == 'admin') {
               return const Tabbar();

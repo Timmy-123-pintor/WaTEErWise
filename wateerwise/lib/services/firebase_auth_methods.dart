@@ -42,7 +42,7 @@ class FirebaseAuthMethods {
             'firstName': firstName,
             'lastName': lastName,
             'email': email,
-            'role': 'user', 
+            'role': 'user',
           })
           .then((value) => print("User Added"))
           .catchError((error) => print("Failed to add user: $error"));
@@ -63,8 +63,7 @@ class FirebaseAuthMethods {
           print('The account already exists for that email.');
         }
       }
-      showSnackBar(
-          context, e.message!);
+      showSnackBar(context, e.message!);
     }
   }
 
@@ -92,7 +91,7 @@ class FirebaseAuthMethods {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login Failed!')),
       );
-      
+
       rethrow; // Re-throw the exception to be caught by the calling method
     }
   }
@@ -103,7 +102,31 @@ class FirebaseAuthMethods {
       _auth.currentUser!.sendEmailVerification();
       showSnackBar(context, 'Email verification sent!');
     } on FirebaseAuthException catch (e) {
-      showSnackBar(context, e.message!); 
+      showSnackBar(context, e.message!);
+    }
+  }
+
+  //RESET PASSWORD
+  Future<void> resetPassword(String email, BuildContext context) async {
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter your email address!')),
+      );
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password reset email sent!')),
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Password reset error: $e');
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('An error occurred. Try again.')),
+      );
     }
   }
 
@@ -126,13 +149,13 @@ class FirebaseAuthMethods {
 
     if (kDebugMode) {
       print('Fetched ${userDocs.docs.length} user(s)');
-    } 
+    }
 
     for (var userDoc in userDocs.docs) {
       var data = userDoc.data();
       if (kDebugMode) {
         print('Data for user ${userDoc.id}: $data');
-      } 
+      }
       users.add(
         UserModel(
           uid: userDoc.id,
@@ -142,7 +165,7 @@ class FirebaseAuthMethods {
           lastName: data['lastName'] as String? ?? '',
         ),
       );
-        }
+    }
     return users;
   }
 
@@ -151,7 +174,7 @@ class FirebaseAuthMethods {
     try {
       await _auth.signOut();
     } on FirebaseAuthException catch (e) {
-      showSnackBar(context, e.message!); 
+      showSnackBar(context, e.message!);
     }
   }
 
