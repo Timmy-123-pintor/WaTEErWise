@@ -1,4 +1,5 @@
 import { getDeviceById, updateDeviceInDatabase, calculateCurrentUsage } from '../../services/device/deviceServices.js';
+import { publish } from '../../services/mqtt/mqttService.js';
 
 export async function getDeviceData(req, res) {
   const data = await getDeviceById(req.params.id);
@@ -13,4 +14,14 @@ export async function updateDeviceSettings(req, res) {
 export async function getCurrentUsage(req, res) {
   const usage = await calculateCurrentUsage(req.params.id);
   res.json(usage);
+}
+
+export function publishAction(req, res) {
+  try {
+    const { topic, message } = req.body;
+    publish(topic, message);
+    res.status(200).send({ success: true, message: 'Published successfully' });
+  } catch (error) {
+    res.status(500).send({ success: false, message: error.message });
+  }
 }
