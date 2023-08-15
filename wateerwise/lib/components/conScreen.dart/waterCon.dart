@@ -49,11 +49,22 @@ class _WaterConsumptionState extends State<WaterConsumption> {
               if (snapValue == null) {
                 content = const Text("No data available");
               } else if (snapValue is double || snapValue is int) {
+                double displayValue;
+
+                if (snapValue is double) {
+                  displayValue = snapValue;
+                } else {
+                  displayValue = (snapValue as int).toDouble();
+                }
+
+                double cubicMetersValue =
+                    displayValue / 1000;
+
                 content = Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "${snapValue.toString()} cubic meters",
+                      "${cubicMetersValue.toStringAsFixed(3)} cubic meters",
                       style: GoogleFonts.quicksand(
                         textStyle: conText1,
                       ),
@@ -72,7 +83,7 @@ class _WaterConsumptionState extends State<WaterConsumption> {
               }
 
               return Container(
-                width: MediaQuery.of(context).size.width * 0.9, 
+                width: MediaQuery.of(context).size.width * 0.9,
                 height: MediaQuery.of(context).size.height * 0.2,
                 decoration: BoxDecoration(
                   color: tWhite,
