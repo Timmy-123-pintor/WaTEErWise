@@ -44,18 +44,54 @@ class _WaterConsumptionState extends State<WaterConsumption> {
               (BuildContext context, AsyncSnapshot<DataSnapshot> snapshot) {
             if (snapshot.hasData) {
               var snapValue = snapshot.data!.value;
+              Widget content;
+
               if (snapValue == null) {
-                return const Text("No data available"); // Handle null values
+                content = const Text("No data available");
               } else if (snapValue is double || snapValue is int) {
-                return Text(
-                  "${snapValue.toString()} cubic meters",
-                  style: GoogleFonts.quicksand(
-                    textStyle: conText1,
-                  ),
+                content = Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "${snapValue.toString()} cubic meters",
+                      style: GoogleFonts.quicksand(
+                        textStyle: conText1,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Current Water Consumption',
+                      style: GoogleFonts.quicksand(
+                        textStyle: conText2,
+                      ),
+                    ),
+                  ],
                 );
+              } else {
+                content = Text("Unexpected data type: $snapValue");
               }
-              return Text(
-                  "Unexpected data type: $snapValue"); // Handle unexpected types
+
+              return Container(
+                width: MediaQuery.of(context).size.width * 0.9, 
+                height: MediaQuery.of(context).size.height * 0.2,
+                decoration: BoxDecoration(
+                  color: tWhite,
+                  image: const DecorationImage(
+                    image: AssetImage('assets/GIF/waterdrop.gif'),
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: content,
+              );
             } else if (snapshot.hasError) {
               return Text(
                 "Error: ${snapshot.error.toString()}",
@@ -66,12 +102,6 @@ class _WaterConsumptionState extends State<WaterConsumption> {
             }
             return const CircularProgressIndicator();
           },
-        ),
-        Text(
-          'Current Water Consumption',
-          style: GoogleFonts.quicksand(
-            textStyle: conText2,
-          ),
         ),
       ],
     );

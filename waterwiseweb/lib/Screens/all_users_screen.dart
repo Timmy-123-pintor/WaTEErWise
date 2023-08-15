@@ -45,7 +45,6 @@ Widget build(BuildContext context) {
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
-                  // Handle the tap event here
                   if (kDebugMode) {
                     print('User pressed: ${nonAdminUsers[index].fullName}');
                   }
@@ -55,7 +54,7 @@ Widget build(BuildContext context) {
                   child: ListTile(
                     title: Text(nonAdminUsers[index].fullName),
                     subtitle: Text(
-                      'Role: ${nonAdminUsers[index].role.capitalize()},\nEmail: ${nonAdminUsers[index].email}',
+                      'Role: ${nonAdminUsers[index].role.capitalize()}\nEmail: ${nonAdminUsers[index].email}',
                     ),
                   ),
                 ),

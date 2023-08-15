@@ -47,11 +47,9 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
       Navigator.pushNamedAndRemoveUntil(
           context, Tabbar.routeName, (route) => false);
     } catch (e) {
-      // Handle login error here
       if (kDebugMode) {
         print('Login error: $e');
       }
-      // Show an error message to the user
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login Successfully!')),
       );
