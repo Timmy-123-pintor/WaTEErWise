@@ -19,7 +19,6 @@ class AddUser extends StatefulWidget {
 }
 
 class _AddUserState extends State<AddUser> {
-  // Add controllers for your TextFields
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -47,7 +46,6 @@ class _AddUserState extends State<AddUser> {
       type: MaterialType.transparency,
       child: Stack(
         children: [
-          // Background Blur
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
             child: Container(
@@ -191,37 +189,34 @@ class _AddUserState extends State<AddUser> {
                                   'lastName': lastName,
                                   'email': email,
                                   'password': password,
-                                  'isAdmin':
-                                      'false', // set 'isAdmin' directly as 'false'
                                 }),
                               );
 
-                              if (response.statusCode == 200) {
-                                try {
-                                  await context
-                                      .read<FirebaseAuthMethods>()
-                                      .signUpWithEmail(
-                                        email: email,
-                                        password: password,
-                                        firstName: firstName,
-                                        lastName: lastName,
-                                        context: context,
-                                      );
-                                  Navigator.of(context).pop();
-                                } catch (e) {
-                                  // Handle signup error
-                                  if (kDebugMode) {
-                                    print(e);
-                                  }
-                                }
+                              if (response.statusCode == 201) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Registration successful!'),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
                               } else {
-                                // Handle backend server error
-                                if (kDebugMode) {
-                                  print('Server error: ${response.statusCode}');
-                                }
+                                var responseJson = jsonDecode(response.body);
+                                String errorMessage = responseJson['message'];
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(errorMessage),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
                               }
                             } catch (e) {
-                              // Handle network error
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content:
+                                      Text('Network error. Please try again.'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
                               if (kDebugMode) {
                                 print('Network error: $e');
                               }
@@ -229,17 +224,14 @@ class _AddUserState extends State<AddUser> {
                           },
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
-                            backgroundColor: Colors.blue, // Set the text color
-                            minimumSize:
-                                const Size(50, 50), // Set the button size
-                            padding:
-                                const EdgeInsets.all(10), // Set the padding
+                            backgroundColor: Colors.blue,
+                            minimumSize: const Size(50, 50),
+                            padding: const EdgeInsets.all(10),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  10), // Set the border radius
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: const Text('Register'), // Button text
+                          child: const Text('Register'),
                         ),
                       ],
                     ),

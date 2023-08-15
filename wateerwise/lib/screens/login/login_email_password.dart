@@ -70,8 +70,6 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
   Future<void> _loginUser(BuildContext context) async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
-
-    // Store the context for this particular method call
     final localContext = context;
 
     if (email.isEmpty || password.isEmpty) {

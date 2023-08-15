@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
         home: const MyAppHome(),
         routes: {
           EmailPasswordLogin.routeName: (context) => const EmailPasswordLogin(),
+          Tabbar.routeName: (context) => const Tabbar(),
         },
       ),
     );

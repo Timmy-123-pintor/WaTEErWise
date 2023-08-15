@@ -107,6 +107,30 @@ class FirebaseAuthMethods {
     }
   }
 
+  // RESET PASSWORD
+  Future<void> resetPassword(String email, BuildContext context) async {
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter your email address!')),
+      );
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password reset email sent!')),
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Password reset error: $e');
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('An error occurred. Try again.')),
+      );
+    }
+  }
+
   // GET USER ROLE
   Future<String?> getUserRole(String uid) async {
     DocumentSnapshot userDoc =

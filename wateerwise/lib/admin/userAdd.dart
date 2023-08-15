@@ -18,7 +18,6 @@ class AddUser extends StatefulWidget {
 }
 
 class _AddUserState extends State<AddUser> {
-  // Add controllers for your TextFields
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -46,7 +45,6 @@ class _AddUserState extends State<AddUser> {
       type: MaterialType.transparency,
       child: Stack(
         children: [
-          // Background Blur
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
             child: Container(
@@ -206,7 +204,6 @@ class _AddUserState extends State<AddUser> {
                                 );
                               }
                             } catch (e) {
-                              // Handle network error
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content:
