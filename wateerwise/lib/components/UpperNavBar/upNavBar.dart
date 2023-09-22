@@ -47,176 +47,172 @@ class _UpTabBarState extends State<UpTabBar>
           elevation: 0.0,
         ),
       ),
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: [
-            Container(
-              height: 34,
-              width: double.infinity,
-              color: tBlue,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/images/waterlogo.png',
-                      width: 33,
-                      height: 33,
-                      fit: BoxFit.cover,
-                    ),
-                    Text(
-                      'WaterWise+',
-                      style: GoogleFonts.quicksand(
-                        textStyle: waterStyle,
-                      ),
-                    ),
-                    const Spacer(),
-                  ],
-                ),
-              ),
-            ),
-            Column(
-              children: [
-                Container(
-                  height: 20,
-                  width: double.infinity,
-                  color: tBlue,
-                )
-              ],
-            ),
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
+      body: Container(
+        color: tBlue,
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: [
+              Container(
+                height: 34,
+                width: double.infinity,
                 color: tBlue,
-              ),
-              child: Column(children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 0, right: 15, left: 15),
-                  child: TabBar(
-                    unselectedLabelColor: tWhite,
-                    labelColor: tBlue,
-                    controller: tabController,
-                    indicator: const BoxDecoration(
-                      color: tWG,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5),
-                          topRight: Radius.circular(5)),
-                    ),
-                    onTap: (index) {
-                      setState(() {
-                        selectedIndex = index;
-                      });
-                    },
-                    tabs: [
-                      Tab(
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              'assets/images/home.png',
-                              width: 24,
-                              height: 24,
-                              color: selectedIndex == 0 ? tBlue : tWhite,
-                            ),
-                            Text(
-                              'Home',
-                              style: GoogleFonts.quicksand(
-                                textStyle: navText,
-                              ),
-                            ),
-                          ],
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        'assets/images/waterlogo.png',
+                        width: 33,
+                        height: 33,
+                        fit: BoxFit.cover,
+                      ),
+                      Text(
+                        'WaterWise+',
+                        style: GoogleFonts.quicksand(
+                          textStyle: waterStyle,
                         ),
                       ),
-                      Tab(
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              'assets/images/wlimit.png',
-                              width: 24,
-                              height: 24,
-                              color: selectedIndex == 1 ? tBlue : tWhite,
-                            ),
-                            Text(
-                              'W-Limit',
-                              style: GoogleFonts.quicksand(
-                                textStyle: navText,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Tab(
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              'assets/images/wbill.png',
-                              width: 24,
-                              height: 24,
-                              color: selectedIndex == 2 ? tBlue : tWhite,
-                            ),
-                            Text(
-                              'W-Bill',
-                              style: GoogleFonts.quicksand(
-                                textStyle: navText,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Tab(
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              'assets/images/alert.png',
-                              width: 24,
-                              height: 24,
-                              color: selectedIndex == 3 ? tBlue : tWhite,
-                            ),
-                            Text(
-                              'Alert',
-                              style: GoogleFonts.quicksand(
-                                textStyle: navText,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Tab(
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              'assets/images/profile.png',
-                              width: 24,
-                              height: 24,
-                              color: selectedIndex == 4 ? tBlue : tWhite,
-                            ),
-                            Text(
-                              'Profile',
-                              style: GoogleFonts.quicksand(
-                                textStyle: navText,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      const Spacer(),
                     ],
                   ),
-                )
-              ]),
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: tabController,
-                children: const [
-                  MainPage(),
-                  WLimit(),
-                  WBill(),
-                  Alert(),
-                  Profile(),
-                ],
+                ),
               ),
-            )
-          ],
+              const SizedBox(height: 25),
+              Container(
+                height: 50,
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: tBlue,
+                ),
+                child: Column(children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 0, right: 15, left: 15),
+                    child: TabBar(
+                      unselectedLabelColor: tWhite,
+                      labelColor: tBlue,
+                      controller: tabController,
+                      indicator: const BoxDecoration(
+                        color: tWG,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(5),
+                            topRight: Radius.circular(5)),
+                      ),
+                      onTap: (index) {
+                        setState(() {
+                          selectedIndex = index;
+                        });
+                      },
+                      tabs: [
+                        Tab(
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'assets/images/home.png',
+                                width: 24,
+                                height: 24,
+                                color: selectedIndex == 0 ? tBlue : tWhite,
+                              ),
+                              Text(
+                                'Home',
+                                style: GoogleFonts.quicksand(
+                                  textStyle: navText,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Tab(
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'assets/images/wlimit.png',
+                                width: 24,
+                                height: 24,
+                                color: selectedIndex == 1 ? tBlue : tWhite,
+                              ),
+                              Text(
+                                'W-Limit',
+                                style: GoogleFonts.quicksand(
+                                  textStyle: navText,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Tab(
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'assets/images/wbill.png',
+                                width: 24,
+                                height: 24,
+                                color: selectedIndex == 2 ? tBlue : tWhite,
+                              ),
+                              Text(
+                                'W-Bill',
+                                style: GoogleFonts.quicksand(
+                                  textStyle: navText,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Tab(
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'assets/images/alert.png',
+                                width: 24,
+                                height: 24,
+                                color: selectedIndex == 3 ? tBlue : tWhite,
+                              ),
+                              Text(
+                                'Alert',
+                                style: GoogleFonts.quicksand(
+                                  textStyle: navText,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Tab(
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'assets/images/profile.png',
+                                width: 24,
+                                height: 24,
+                                color: selectedIndex == 4 ? tBlue : tWhite,
+                              ),
+                              Text(
+                                'Profile',
+                                style: GoogleFonts.quicksand(
+                                  textStyle: navText,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ]),
+              ),
+              Expanded(
+                child: TabBarView(
+                  controller: tabController,
+                  children: const [
+                    MainPage(),
+                    WLimit(),
+                    WBill(),
+                    Alert(),
+                    Profile(),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

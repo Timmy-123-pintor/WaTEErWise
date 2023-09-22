@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '../components/Graphs/HomeGraphs/billPoint.dart';
 import '../components/Graphs/HomeGraphs/consumptionGraph.dart';
-import '../components/Graphs/HomeGraphs/paymentGraph.dart';
 import '../components/Graphs/HomeGraphs/waterPoint.dart';
 import '../components/conScreen.dart/currentBill.dart';
 import '../components/conScreen.dart/prevConsumption.dart';
@@ -67,7 +65,6 @@ class _MainPageState extends State<MainPage> {
                     const SizedBox(
                       height: 20,
                     ),
-                    PaymentGraph(billPoints),
                   ],
                 ),
               ),

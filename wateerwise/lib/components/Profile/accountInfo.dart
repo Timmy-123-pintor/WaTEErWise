@@ -1,3 +1,6 @@
+// ignore_for_file: file_names
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -5,9 +8,40 @@ import 'package:wateerwise/screens/login/login_email_password.dart';
 import 'package:wateerwise/services/firebase_auth_methods.dart';
 
 import '../../constant.dart';
+import 'aboutUs.dart';
+import 'editUserDetails.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class AccounntInfo extends StatelessWidget {
+class AccounntInfo extends StatefulWidget {
   const AccounntInfo({super.key});
+
+  @override
+  State<AccounntInfo> createState() => _AccounntInfoState();
+}
+
+class _AccounntInfoState extends State<AccounntInfo> {
+  String userEmail = "";
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserEmail();
+  }
+
+  Future<void> fetchUserEmail() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        setState(() {
+          userEmail = user.email ?? '';
+        });
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error fetching user email: $error');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +73,7 @@ class AccounntInfo extends StatelessWidget {
                     width: 15,
                   ),
                   Text(
-                    'waterwise@gmail.com',
+                    userEmail,
                     style: GoogleFonts.quicksand(
                       textStyle: profileText,
                     ),
@@ -102,68 +136,81 @@ class AccounntInfo extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              Row(
-                children: [
-                  Image.asset(
-                    'assets/images/contactsBl.png',
-                    width: 20,
-                    height: 20,
-                    fit: BoxFit.cover,
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Text(
-                    'Edit Contact Details',
-                    style: GoogleFonts.quicksand(
-                      textStyle: profileText,
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const UserEditDetails()));
+                },
+                child: Row(
+                  children: [
+                    Image.asset(
+                      'assets/images/contactsBl.png',
+                      width: 20,
+                      height: 20,
+                      fit: BoxFit.cover,
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      'Edit Contact Details',
+                      style: GoogleFonts.quicksand(
+                        textStyle: profileText,
+                      ),
+                    ),
+                  ],
+                ),
               ),
+
+              // const SizedBox(
+              //   height: 15,
+              // ),
+              // Row(
+              //   children: [
+              //     Image.asset(
+              //       'assets/images/settings.png',
+              //       width: 20,
+              //       height: 20,
+              //       fit: BoxFit.cover,
+              //     ),
+              //     const SizedBox(
+              //       width: 15,
+              //     ),
+              //     Text(
+              //       'Account Settings',
+              //       style: GoogleFonts.quicksand(
+              //         textStyle: profileText,
+              //       ),
+              //     ),
+              //   ],
+              // ),
               const SizedBox(
                 height: 15,
               ),
-              Row(
-                children: [
-                  Image.asset(
-                    'assets/images/settings.png',
-                    width: 20,
-                    height: 20,
-                    fit: BoxFit.cover,
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Text(
-                    'Account Settings',
-                    style: GoogleFonts.quicksand(
-                      textStyle: profileText,
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const AboutUs()));
+                },
+                child: Row(
+                  children: [
+                    Image.asset(
+                      'assets/images/help.png',
+                      width: 20,
+                      height: 20,
+                      fit: BoxFit.cover,
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Row(
-                children: [
-                  Image.asset(
-                    'assets/images/help.png',
-                    width: 20,
-                    height: 20,
-                    fit: BoxFit.cover,
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Text(
-                    'Help and Support',
-                    style: GoogleFonts.quicksand(
-                      textStyle: profileText,
+                    const SizedBox(
+                      width: 15,
                     ),
-                  ),
-                ],
+                    Text(
+                      'About Us',
+                      style: GoogleFonts.quicksand(
+                        textStyle: profileText,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 15,

@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import '../../../constant.dart';
 
 class WLimitGraph extends StatelessWidget {
-  const WLimitGraph({super.key});
+  const WLimitGraph(
+      {super.key, required num endValue, required double currentValue});
 
   @override
   Widget build(BuildContext context) {

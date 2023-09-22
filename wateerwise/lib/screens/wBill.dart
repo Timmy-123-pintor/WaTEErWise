@@ -34,7 +34,10 @@ class _WBillState extends State<WBill> {
                 padding: const EdgeInsets.all(15),
                 child: ListView(
                   children: [
-                    const WLimitGraph(),
+                    const WLimitGraph(
+                      endValue: 0,
+                      currentValue: 0,
+                    ),
                     const SizedBox(
                       height: 20,
                     ),

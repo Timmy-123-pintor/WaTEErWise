@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, file_names
 
 import 'dart:convert';
 import 'dart:ui';
@@ -218,17 +218,14 @@ class _AddUserState extends State<AddUser> {
                           },
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
-                            backgroundColor: Colors.blue, 
-                            minimumSize:
-                                const Size(50, 50), 
-                            padding:
-                                const EdgeInsets.all(10), 
+                            backgroundColor: Colors.blue,
+                            minimumSize: const Size(50, 50),
+                            padding: const EdgeInsets.all(10),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  10),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: const Text('Register'), 
+                          child: const Text('Register'),
                         ),
                       ],
                     ),

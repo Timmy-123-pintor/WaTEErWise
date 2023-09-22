@@ -37,7 +37,10 @@ class _WLimitState extends State<WLimit> {
                     const SizedBox(
                       height: 20,
                     ),
-                    const WLimitGraph(),
+                    const WLimitGraph(
+                      endValue: 0,
+                      currentValue: 0,
+                    ),
                     const SizedBox(
                       height: 20,
                     ),

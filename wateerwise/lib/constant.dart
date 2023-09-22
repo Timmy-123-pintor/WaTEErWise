@@ -73,6 +73,7 @@ const conText2 = TextStyle(
   fontWeight: FontWeight.w500,
   color: tBlue,
 );
+
 //font size 11-20 -------------------
 
 const conTextBlack = TextStyle(
@@ -111,6 +112,12 @@ const status = TextStyle(
   color: tOrange,
 );
 
+const appBar = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.w500,
+  color: tWhite,
+);
+
 const latest = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w500,
@@ -141,6 +148,12 @@ const waterStyle = TextStyle(
   fontSize: 32,
   fontWeight: FontWeight.bold,
   color: tWhite,
+);
+
+const waterStyleB = TextStyle(
+  fontSize: 32,
+  fontWeight: FontWeight.bold,
+  color: tBlue,
 );
 
 const conText1 = TextStyle(

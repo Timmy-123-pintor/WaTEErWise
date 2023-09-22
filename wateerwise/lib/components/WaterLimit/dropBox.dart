@@ -4,7 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../constant.dart';
 
 class DropdownContainer extends StatefulWidget {
-  const DropdownContainer({super.key});
+  const DropdownContainer(
+      {super.key,
+      required Null Function(dynamic selectedPeriod) onPeriodSelected});
 
   @override
   _DropdownContainerState createState() => _DropdownContainerState();
