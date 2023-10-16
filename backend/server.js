@@ -4,9 +4,10 @@ import { connect as connectMQTT } from './services/mqtt/mqttService.js';
 
 const app = express();
 
-app.use(cors({
-    origin: 'http://192.168.254.103:3000'   
-}));
+// app.use(cors({
+//     origin: ['http://localhost:3000', 'http://10.0.2.2:3000', 'http://localhost:53560']
+// }));
+app.use(cors());
 
 // Import the routes
 import customerRoutes from './routes/customer/customerRoutes.js';
@@ -28,4 +29,6 @@ const port = process.env.PORT || 3000;
 // Connect to MQTT Broker
 connectMQTT();
 
-app.listen(port, () => console.log(`Server is listening on port ${port}`));
+app.listen(port, '0.0.0.0', () => console.log(`Server is listening on port ${port}`));
+
+
