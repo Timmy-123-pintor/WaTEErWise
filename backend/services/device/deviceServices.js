@@ -23,3 +23,23 @@ export async function calculateCurrentUsage(id) {
 
   return usage;
 }
+
+// Add this new function
+export async function getAllDevices() {
+  const snapshot = await database().ref('/devices').once('value');
+  const devicesData = snapshot.val();
+  
+  const devicesArray = [];
+  for (let deviceId in devicesData) {
+    const device = devicesData[deviceId];
+    device.id = deviceId;
+    devicesArray.push(device);
+  }
+  
+  return devicesArray;
+}
+
+export async function deleteDeviceFromDatabase(id) {
+  const ref = database().ref('/devices/' + id);
+  await ref.remove();
+}

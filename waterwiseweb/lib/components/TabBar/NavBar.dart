@@ -148,7 +148,7 @@ class _TabbarState extends State<Tabbar> {
                 ),
                 renderView(
                   2,
-                  const Devices(),
+                  DeviceScreen(),
                 ),
                 renderView(
                   3,
