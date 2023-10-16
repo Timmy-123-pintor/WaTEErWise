@@ -1,13 +1,32 @@
 // ignore_for_file: file_names
 
-import 'package:flutter/foundation.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../constant.dart';
 
-class ProfilePick extends StatelessWidget {
+class ProfilePick extends StatefulWidget {
   const ProfilePick({super.key});
+
+  @override
+  _ProfilePickState createState() => _ProfilePickState();
+}
+
+class _ProfilePickState extends State<ProfilePick> {
+  File? _selectedImage;
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _selectedImage = File(image.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +45,12 @@ class ProfilePick extends StatelessWidget {
                     color: tBlue,
                   ),
                   shape: BoxShape.circle,
+                  image: _selectedImage != null
+                      ? DecorationImage(
+                          image: FileImage(_selectedImage!),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
                   color: tBlack,
                 ),
               ),
@@ -33,12 +58,7 @@ class ProfilePick extends StatelessWidget {
                 bottom: 0,
                 right: 0,
                 child: GestureDetector(
-                  onTap: () {
-                    // Handle the click event here
-                    if (kDebugMode) {
-                      print('Container clicked!');
-                    }
-                  },
+                  onTap: _pickImage,
                   child: Container(
                     height: 40,
                     width: 40,
@@ -56,7 +76,7 @@ class ProfilePick extends StatelessWidget {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
           const SizedBox(
@@ -88,7 +108,7 @@ class ProfilePick extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                " • Restticted",
+                " • Restricted",
                 style: GoogleFonts.inter(
                   textStyle: status,
                 ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../components/Graphs/HomeGraphs/consumptionGraph.dart';
 import '../components/Graphs/HomeGraphs/waterPoint.dart';
 import '../components/conScreen.dart/currentBill.dart';
@@ -7,13 +9,40 @@ import '../components/conScreen.dart/waterCon.dart';
 import '../constant.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
+  Map<String, dynamic>? userData;
+  bool isLoading = true;
+  String? error;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    try {
+      final String uid = FirebaseAuth.instance.currentUser!.uid;
+      final DocumentSnapshot userDoc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      setState(() {
+        userData = userDoc.data() as Map<String, dynamic>;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        error = e.toString();
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,15 +62,15 @@ class _MainPageState extends State<MainPage> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: ListView(
-                  children: [
-                    const SizedBox(
-                      height: 20,
+                  children: const [
+                    SizedBox(
+                      height: 15,
                     ),
-                    const WaterConsumption(),
-                    const SizedBox(
-                      height: 20,
+                    WaterConsumption(),
+                    SizedBox(
+                      height: 10,
                     ),
-                    const Center(
+                    Center(
                       child: Row(
                         children: [
                           Expanded(
@@ -58,12 +87,12 @@ class _MainPageState extends State<MainPage> {
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
+                    SizedBox(
+                      height: 10,
                     ),
-                    ConsumptionTrend(waterPoints),
-                    const SizedBox(
-                      height: 20,
+                    ConsumptionTrend(),
+                    SizedBox(
+                      height: 10,
                     ),
                   ],
                 ),
