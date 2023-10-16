@@ -37,12 +37,21 @@ export async function register(req, res) {
 
 export async function login(req, res) {
   try {
+    // Check if the user exists
     const userRecord = await auth().getUserByEmail(req.body.email);
 
-    const customToken = await auth().createCustomToken(userRecord.uid);
+    // Since we're using firebase-admin, we don't verify the password here.
+    // Instead, you should have your own method of verifying passwords if needed.
 
+    const customToken = await auth().createCustomToken(userRecord.uid);
     res.status(200).send({ token: customToken });
   } catch (err) {
-    res.status(500).send({ message: `Error logging in user: ${err.message}` });
+    if (err.code === 'auth/user-not-found') {
+      res.status(401).send({ message: 'Invalid email.' });
+    } else {
+      res.status(500).send({ message: `Error logging in user: ${err.message}` });
+    }
   }
 }
+
+

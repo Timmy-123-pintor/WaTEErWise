@@ -15,7 +15,6 @@ const setAdminClaim = async (email) => {
 
   // Check if the document exists
   if (!docSnapshot.exists) {
-    // If the document does not exist, create it
     await userDoc.set({ 
         role: 'admin',
         email: user.email, 
