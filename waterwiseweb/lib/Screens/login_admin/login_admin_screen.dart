@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waterwiseweb/Screens/services/firebase_auth_methods.dart';
 import 'package:waterwiseweb/components/TabBar/NavBar.dart';
+import 'package:waterwiseweb/constants/cons.dart';
 
 class EmailPasswordLogin extends StatefulWidget {
   static const routeName = '/EmailPasswordLoginWM';
@@ -84,7 +85,7 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
           );
 
       await _saveRememberedCredentials();
-      
+
       _showSnackBar(context, 'Login Successfully!');
       Navigator.pushNamedAndRemoveUntil(
           context, Tabbar.routeName, (route) => false);
@@ -107,94 +108,236 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            "Login",
-            style: TextStyle(fontSize: 30),
+      body: Stack(children: [
+        // Positioned(
+        //   top: 80,
+        //   child: _buildTop(),
+        // ),
+        Positioned(
+          child: Center(
+            child: _buildBottom(),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.08),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            child: TextField(
-              controller: emailController,
-              decoration: const InputDecoration(
-                labelText: 'Enter your email',
-                prefixIcon: Icon(Icons.email),
+        ),
+      ]),
+    );
+  }
+
+  // Widget _buildTop() {
+  //   return SizedBox(
+  //     width: mediaSize.width,
+  //     child: const Column(
+  //       mainAxisSize: MainAxisSize.min,
+  //       children: [
+  //         //waterwise+ logo
+
+  //         Text(
+  //           "WATERWISE+",
+  //           style: TextStyle(
+  //             color: tBlue,
+  //             fontWeight: FontWeight.bold,
+  //             fontSize: 40,
+  //             letterSpacing: 2,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  Widget _buildBottom() {
+    return SizedBox(
+      width: 400,
+      height: 400,
+      child: Card(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(30)),
+        ),
+        color: tWhite,
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: _buildForm(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildForm() {
+    return SingleChildScrollView(
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Welcome",
+          style: TextStyle(
+              color: tBlue, fontSize: 32, fontWeight: FontWeight.bold),
+        ),
+        _buildGreyText("Please login with your information"),
+        const SizedBox(height: 20),
+        Container(
+          height: 55,
+          decoration: BoxDecoration(
+            color: tWhite,
+            borderRadius: BorderRadius.circular(6),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 7,
+              ),
+            ],
+          ),
+          child: TextFormField(
+            controller: emailController,
+            style: const TextStyle(color: tBlack),
+            decoration: const InputDecoration(
+              hintText: 'Enter your email',
+              prefixIcon: Icon(Icons.email, color: tBlue),
+              border: InputBorder.none,
+              contentPadding:
+                  EdgeInsets.only(top: 25.0, left: 50.0, bottom: 25.0),
+              hintStyle: TextStyle(
+                height: 1,
               ),
             ),
           ),
-          const SizedBox(height: 20),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            child: TextField(
-              controller: passwordController,
-              obscureText: _obscureText,
-              decoration: InputDecoration(
-                labelText: 'Enter your password',
-                prefixIcon: const Icon(Icons.lock),
-                suffixIcon: IconButton(
-                  icon: _obscureText
-                      ? const Icon(Icons.visibility_off)
-                      : const Icon(Icons.visibility),
-                  onPressed: () {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                    });
-                  },
+        ),
+        const SizedBox(height: 20),
+        Container(
+          height: 55,
+          decoration: BoxDecoration(
+            color: tWhite,
+            borderRadius: BorderRadius.circular(6),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 7,
+              ),
+            ],
+          ),
+          child: TextFormField(
+            controller: passwordController,
+            style: const TextStyle(color: tBlack),
+            obscureText: _obscureText,
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.lock, color: tBlue),
+              hintText: 'Enter your password',
+              suffixIcon: IconButton(
+                splashRadius: 20.0,
+                highlightColor: Colors.transparent,
+                icon: _obscureText
+                    ? const Icon(Icons.visibility_off, color: tBlue)
+                    : const Icon(Icons.visibility, color: tBlue),
+                onPressed: () {
+                  setState(() {
+                    _obscureText = !_obscureText;
+                  });
+                },
+              ),
+              border: InputBorder.none,
+              contentPadding:
+                  const EdgeInsets.only(top: 25.0, left: 50.0, bottom: 25.0),
+              // contentPadding: const EdgeInsets.all(0),
+              hintStyle: const TextStyle(
+                height: 1,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        _buildRememberForgot(),
+        const SizedBox(height: 20),
+        _buildLoginButton(),
+      ],
+    ));
+  }
+
+  Widget _buildGreyText(String text) {
+    return Text(
+      text,
+      style: const TextStyle(color: tBlack),
+    );
+  }
+
+  Widget _buildRememberForgot() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Theme(
+              data: ThemeData(
+                unselectedWidgetColor:
+                    tBlue, // This sets the border color for the unchecked state
+              ),
+              child: Checkbox(
+                value: _rememberPassword,
+                onChanged: (bool? value) {
+                  setState(() {
+                    _rememberPassword = value!;
+                  });
+                },
+                activeColor: tWhite, // Color of the checkbox when it's checked
+                checkColor: tWhite, // Color of the check icon
+                fillColor: MaterialStateProperty.resolveWith((states) {
+                  if (states.contains(MaterialState.selected)) {
+                    return tBlue; // Background color of the checkbox when it's checked
+                  }
+                  return tWhite; // Background color of the checkbox when it's unchecked
+                }),
+                shape: const RoundedRectangleBorder(
+                  side: BorderSide(
+                      color:
+                          tBlue), // This sets the border color for the checked state
                 ),
               ),
             ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _rememberPassword,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _rememberPassword = value!;
-                        });
-                      },
-                    ),
-                    const Text('Remember Password'),
-                  ],
-                ),
-                TextButton(
-                  onPressed: () => context
-                      .read<FirebaseAuthMethods>()
-                      .resetPassword(emailController.text, context),
-                  child: const Text(
-                    "Forgot Password?",
-                    style: TextStyle(color: Colors.blue, fontSize: 14),
-                  ),
-                ),
-              ],
+            const Text(
+              'Remember Password',
+              style: TextStyle(
+                  color: tBlack, fontSize: 14, fontWeight: FontWeight.bold),
             ),
+          ],
+        ),
+        TextButton(
+          onPressed: () =>
+              Provider.of<FirebaseAuthMethods>(context, listen: false)
+                  .resetPassword(emailController.text, context),
+          child: const Text(
+            "Forgot Password?",
+            style: TextStyle(
+                color: tBlack, fontSize: 14, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 40),
-          ElevatedButton(
-            onPressed: loginUser,
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.blue),
-              textStyle: MaterialStateProperty.all(
-                const TextStyle(color: Colors.white),
-              ),
-              minimumSize: MaterialStateProperty.all(
-                Size(MediaQuery.of(context).size.width / 2.5, 50),
-              ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLoginButton() {
+    return InkWell(
+      onTap: () {
+        debugPrint("Email : ${emailController.text}");
+        debugPrint("Password : ${passwordController.text}");
+        loginUser();
+      },
+      child: Container(
+        alignment: Alignment.center,
+        height: 50,
+        decoration: BoxDecoration(
+          color: tBlue,
+          borderRadius: const BorderRadius.all(Radius.circular(6)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
             ),
-            child: const Text(
-              "Login",
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
+          ],
+        ),
+        child: const Text(
+          "Login",
+          style: TextStyle(
+            color: tWhite,
+            fontWeight: FontWeight.bold,
           ),
-        ],
+        ),
       ),
     );
   }
