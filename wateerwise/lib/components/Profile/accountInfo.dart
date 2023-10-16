@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:wateerwise/provider/provider.dart';
 import 'package:wateerwise/screens/login/login_email_password.dart';
 import 'package:wateerwise/services/firebase_auth_methods.dart';
-
 import '../../constant.dart';
 import 'aboutUs.dart';
 import 'editUserDetails.dart';
@@ -45,6 +45,7 @@ class _AccounntInfoState extends State<AccounntInfo> {
 
   @override
   Widget build(BuildContext context) {
+    final phoneNumberProvider = Provider.of<PhoneNumberProvider>(context);
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15),
       child: Column(
@@ -95,7 +96,7 @@ class _AccounntInfoState extends State<AccounntInfo> {
                     width: 15,
                   ),
                   Text(
-                    '09454283224',
+                    phoneNumberProvider.phoneNumber,
                     style: GoogleFonts.quicksand(
                       textStyle: profileText,
                     ),
