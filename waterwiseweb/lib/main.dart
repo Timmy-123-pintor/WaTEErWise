@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:waterwiseweb/Screens/login_admin/login_admin_screen.dart';
 import 'package:waterwiseweb/Screens/services/firebase_auth_methods.dart';
@@ -34,8 +33,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
+        theme: ThemeData.dark().copyWith(
+          scaffoldBackgroundColor: tWhite,
         ),
         home: const MyAppHome(),
         routes: {
@@ -52,41 +51,9 @@ class MyAppHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
-    final double appBarHeight = 70 / devicePixelRatio;
     final firebaseUser = context.watch<User?>();
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(appBarHeight),
-        child: Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: AppBar(
-            scrolledUnderElevation: 1.0,
-            title: Row(
-              children: [
-                Text(
-                  'WaterWise+',
-                  style: GoogleFonts.quicksand(
-                    textStyle: waterStyle,
-                  ),
-                ),
-              ],
-            ),
-            backgroundColor: tWhite,
-            elevation: 0.0,
-          ),
-        ),
-      ),
       body: firebaseUser != null ? const Tabbar() : const EmailPasswordLogin(),
     );
   }
