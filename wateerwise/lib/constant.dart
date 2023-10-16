@@ -13,7 +13,9 @@ const tGreen = Color(0XFF3F8B35);
 const tBlackG = Color.fromARGB(255, 66, 66, 66);
 const tOrange = Color(0XFFFFA500);
 const tRed = Color(0xFFFF9494);
+const mainGridLineColor = Colors.white10;
 
+List<Color> gradientColors = [const Color(0xFF3464D4), const Color(0XFF5186FF)];
 // WITH OPACITY
 const tBlackO = Color.fromRGBO(58, 58, 58, 0.401);
 const tBlueO = Color.fromARGB(48, 52, 100, 212);

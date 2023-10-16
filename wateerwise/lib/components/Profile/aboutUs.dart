@@ -63,7 +63,7 @@ class AboutUs extends StatelessWidget {
                 ),
               ),
             ),
-          ),
+          )
         ],
       ),
     );

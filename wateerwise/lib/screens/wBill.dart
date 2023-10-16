@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wateerwise/components/Graphs/HomeGraphs/consumptionGraph.dart';
-import 'package:wateerwise/components/Graphs/HomeGraphs/waterPoint.dart';
+// import 'package:wateerwise/components/Graphs/HomeGraphs/consumptionGraph.dart';
+// import 'package:wateerwise/components/Graphs/HomeGraphs/waterPoint.dart';
 import 'package:wateerwise/components/Graphs/WLimitGraph/wLimitGraph.dart';
 import 'package:wateerwise/components/WaterLimit/waterLimitCon.dart';
 import '../components/WaterBill/billSumary.dart';
@@ -33,25 +33,22 @@ class _WBillState extends State<WBill> {
               child: Padding(
                 padding: const EdgeInsets.all(15),
                 child: ListView(
-                  children: [
-                    // const WLimitGraph(
-                    //   endValue: 0,
-                    //   currentValue: 0,
-                    // ),
-                    const SizedBox(
+                  children: const [
+                    // const WLimitGraph(),
+                    SizedBox(
                       height: 20,
                     ),
-                    const Center(
+                    Center(
                         // child: WaterCon(),
                         ),
-                    const SizedBox(
+                    SizedBox(
                       height: 10,
                     ),
-                    ConsumptionTrend(waterPoints),
-                    const SizedBox(
+                    // ConsumptionTrend(waterPoints),
+                    SizedBox(
                       height: 10,
                     ),
-                    const BillSum(),
+                    BillSum(),
 
                     // ConsumptionTrend(),
                   ],
