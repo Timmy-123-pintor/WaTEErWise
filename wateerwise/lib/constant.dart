@@ -8,6 +8,7 @@ const tBlack = Color(0xFF3A3A3A);
 const tWG = Color.fromARGB(255, 246, 246, 246);
 const alertC = Color(0XFFE9EAFB);
 const tGray = Color.fromARGB(255, 219, 219, 219);
+const tGray2 = Color.fromARGB(255, 197, 197, 197);
 const tGreen = Color(0XFF3F8B35);
 const tBlackG = Color.fromARGB(255, 66, 66, 66);
 const tOrange = Color(0XFFFFA500);
@@ -82,6 +83,18 @@ const conTextBlack = TextStyle(
   color: tBlack,
 );
 
+const text12Blue = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w500,
+  color: tBlue,
+);
+
+const text12White = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w500,
+  color: tWhite,
+);
+
 const profileText = TextStyle(
   fontSize: 12,
   fontWeight: FontWeight.w700,
@@ -106,6 +119,24 @@ const name = TextStyle(
   color: tBlack,
 );
 
+const textGray15 = TextStyle(
+  fontSize: 15,
+  fontWeight: FontWeight.bold,
+  color: tGray2,
+);
+
+const text15Blue = TextStyle(
+  fontSize: 15,
+  fontWeight: FontWeight.bold,
+  color: tBlue,
+);
+
+const text15White = TextStyle(
+  fontSize: 15,
+  fontWeight: FontWeight.bold,
+  color: tWhite,
+);
+
 const status = TextStyle(
   fontSize: 15,
   fontWeight: FontWeight.normal,
@@ -128,6 +159,12 @@ const gradCon = TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.bold,
   color: tWhite,
+);
+
+const text20Red = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+  color: tRed,
 );
 
 //font size 30+ -------------------

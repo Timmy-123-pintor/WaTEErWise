@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:wateerwise/admin/navTabBar.dart';
 import 'package:wateerwise/components/UpperNavBar/upNavBar.dart';
 import 'package:wateerwise/firebase_options.dart';
+import 'package:wateerwise/provider/provider.dart';
 import 'package:wateerwise/screens/login/login_email_password.dart';
 import 'package:wateerwise/screens/splashscreen/splash_screen.dart';
 import 'package:wateerwise/services/firebase_auth_methods.dart';
@@ -30,6 +31,12 @@ class MyApp extends StatelessWidget {
         StreamProvider<User?>.value(
           value: FirebaseAuth.instance.authStateChanges(),
           initialData: null,
+        ),
+        ChangeNotifierProvider<PhoneNumberProvider>(
+          create: (_) => PhoneNumberProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ProgressProvider(),
         ),
       ],
       child: MaterialApp(
@@ -80,7 +87,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
     final firebaseUser = context.watch<User?>();
     if (firebaseUser != null) {
       return FutureBuilder<String?>(
-        future: userRoleFuture, 
+        future: userRoleFuture,
         builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));

@@ -45,3 +45,12 @@ class Alert extends StatelessWidget {
     );
   }
 }
+
+
+//Things to do to make this screen function;
+
+//Make dummy data
+//Set data for the dummy
+//Test the dummy data
+//Test if the notification screen function
+
