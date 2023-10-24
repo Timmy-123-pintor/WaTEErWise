@@ -83,7 +83,7 @@ class _InputTextFieldState extends State<InputTextField> {
                 child: TextField(
                   controller: _controller,
                   decoration: InputDecoration(
-                    labelText: 'Enter Value here',
+                    labelText: 'Enter Value',
                     errorText:
                         _hasError ? 'Please input your desired limit' : null,
                     border: InputBorder.none,
