@@ -1,6 +1,8 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, library_private_types_in_public_api
 
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,6 +18,7 @@ class ProfilePick extends StatefulWidget {
 
 class _ProfilePickState extends State<ProfilePick> {
   File? _selectedImage;
+  String userName = '';
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -30,6 +33,23 @@ class _ProfilePickState extends State<ProfilePick> {
 
   @override
   Widget build(BuildContext context) {
+    void fetchUser() async {
+      try {
+        User? user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          setState(() {
+            userName = user.displayName ?? '';
+          });
+        }
+      } catch (error) {
+        if (kDebugMode) {
+          print('Error fetching user email: $error');
+        }
+      }
+    }
+
+    fetchUser();
+
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15),
       child: Column(
@@ -83,7 +103,7 @@ class _ProfilePickState extends State<ProfilePick> {
             height: 10,
           ),
           Text(
-            "Melvin P. Forbis",
+            userName,
             style: GoogleFonts.quicksand(
               textStyle: name,
             ),

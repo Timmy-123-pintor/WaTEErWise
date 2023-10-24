@@ -207,6 +207,21 @@ const waterWhite = TextStyle(
   color: tWhite,
 );
 
+class Constant {
+  static TextStyle warning15(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double textScaleFactor = screenWidth < 360 ? 0.8 : 1.0;
+
+    return GoogleFonts.quicksand(
+      textStyle: TextStyle(
+        fontSize: 15 * textScaleFactor,
+        fontWeight: FontWeight.bold,
+        color: tRed,
+      ),
+    );
+  }
+}
+
 //custom widget
 class DescriptionWidget extends StatelessWidget {
   final String title;

@@ -31,43 +31,43 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
   }
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: FutureBuilder<List<UserModel>>(
-      future: _futureUsers,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          List<UserModel> nonAdminUsers = snapshot.data!
-              .where((user) => user.role.toLowerCase() != 'admin')
-              .toList();
-          return ListView.builder(
-            itemCount: nonAdminUsers.length,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  if (kDebugMode) {
-                    print('User pressed: ${nonAdminUsers[index].fullName}');
-                  }
-                },
-                child: Card(
-                  margin: const EdgeInsets.all(8.0),
-                  child: ListTile(
-                    title: Text(nonAdminUsers[index].fullName),
-                    subtitle: Text(
-                      'Role: ${nonAdminUsers[index].role.capitalize()}\nEmail: ${nonAdminUsers[index].email}',
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder<List<UserModel>>(
+        future: _futureUsers,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<UserModel> nonAdminUsers = snapshot.data!
+                .where((user) => user.role.toLowerCase() != 'admin')
+                .toList();
+            return ListView.builder(
+              itemCount: nonAdminUsers.length,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    if (kDebugMode) {
+                      print('User pressed: ${nonAdminUsers[index].fullName}');
+                    }
+                  },
+                  child: Card(
+                    margin: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                      title: Text(nonAdminUsers[index].fullName),
+                      subtitle: Text(
+                        'Role: ${nonAdminUsers[index].role.capitalize()}\nEmail: ${nonAdminUsers[index].email}',
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          );
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
 
-        return const CircularProgressIndicator();
-      },
-    ),
-  );
- }
+          return const CircularProgressIndicator();
+        },
+      ),
+    );
+  }
 }

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wateerwise/components/Graphs/HomeGraphs/waterPoint.dart';
+import 'package:wateerwise/components/Graphs/HomeGraphs/waterConsumptionHistory.dart';
+import 'package:wateerwise/components/WaterLimit/waterLimitCon.dart';
 import 'package:wateerwise/provider/provider.dart';
-
-import '../components/Graphs/HomeGraphs/consumptionGraph.dart';
 import '../components/Graphs/WLimitGraph/wLimitGraph.dart';
-import '../components/WaterLimit/waterCon.dart';
 import '../constant.dart';
 
 class WLimit extends StatefulWidget {
@@ -37,45 +35,26 @@ class _WLimitState extends State<WLimit> {
                 padding: const EdgeInsets.all(15),
                 child: ListView(
                   children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    // const WLimitGraph(),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Center(
-                        // child: WaterCon(),
+                    Stack(
+                      alignment:
+                          Alignment.center, // Center the SemiCircleProgressBar
+                      children: [
+                        SemiCircleProgressBar(
+                          maxValue: progressProvider.maxValue,
                         ),
+                        const Positioned(
+                          top:
+                              210, // Adjust this value for vertical positioning
+                          child: InputTextField(),
+                        ),
+                      ],
+                    ),
                     const SizedBox(
                       height: 10,
                     ),
-                    // ConsumptionTrend(waterPoints),
+                    WaterConsumptionHistory(),
                     const SizedBox(
                       height: 10,
-                    ),
-                    Container(
-                      width: 350,
-                      height: 235,
-                      decoration: BoxDecoration(
-                        color: tWhite,
-                        image: const DecorationImage(
-                          image: AssetImage('assets/images/conHistory.png'),
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5), // Shadow color
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
                     ),
                   ],
                 ),

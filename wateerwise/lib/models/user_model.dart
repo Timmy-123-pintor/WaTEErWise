@@ -2,7 +2,7 @@ class UserModel {
   final String uid;
   final String email;
   final String role;
-  final String firstName;
+  late final String firstName;
   final String lastName;
 
   UserModel({

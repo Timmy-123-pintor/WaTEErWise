@@ -22,6 +22,7 @@ class _UserEditDetailsState extends State<UserEditDetails> {
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isEditMode = false;
+  String userName = '';
 
   Future<bool> _openPasswordConfirmation(BuildContext context) async {
     final isPasswordConfirmed = await showDialog<bool>(
@@ -41,6 +42,25 @@ class _UserEditDetailsState extends State<UserEditDetails> {
     phoneNumberProvider.phoneNumber;
   }
 
+  void _unfocusTextField() {
+    FocusScope.of(context).unfocus();
+  }
+
+  Future<void> toggleEditMode() async {
+    if (isEditMode) {
+      setState(() {
+        isEditMode = false;
+      });
+    } else {
+      final isPasswordConfirmed = await _openPasswordConfirmation(context);
+      if (isPasswordConfirmed) {
+        setState(() {
+          isEditMode = !isEditMode;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final phoneNumberProvider =
@@ -53,6 +73,7 @@ class _UserEditDetailsState extends State<UserEditDetails> {
         if (user != null) {
           setState(() {
             userEmail = user.email ?? '';
+            userName = user.displayName ?? '';
           });
         }
       } catch (error) {
@@ -63,25 +84,6 @@ class _UserEditDetailsState extends State<UserEditDetails> {
     }
 
     fetchUserEmail();
-
-    void _unfocusTextField() {
-      FocusScope.of(context).unfocus();
-    }
-
-    Future<void> toggleEditMode() async {
-      if (isEditMode) {
-        setState(() {
-          isEditMode = false;
-        });
-      } else {
-        final isPasswordConfirmed = await _openPasswordConfirmation(context);
-        if (isPasswordConfirmed) {
-          setState(() {
-            isEditMode = !isEditMode;
-          });
-        }
-      }
-    }
 
     return WillPopScope(
       onWillPop: () async {
@@ -125,7 +127,7 @@ class _UserEditDetailsState extends State<UserEditDetails> {
             const SizedBox(height: 10),
             Center(
               child: Text(
-                "Melvin P. Forbis",
+                userName,
                 style: GoogleFonts.quicksand(
                   textStyle: name,
                 ),

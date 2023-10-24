@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../components/Graphs/HomeGraphs/consumptionGraph.dart';
-import '../components/Graphs/HomeGraphs/waterPoint.dart';
 import '../components/conScreen.dart/currentBill.dart';
 import '../components/conScreen.dart/prevConsumption.dart';
 import '../components/conScreen.dart/waterCon.dart';
