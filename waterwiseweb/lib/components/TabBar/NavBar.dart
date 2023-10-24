@@ -1,15 +1,14 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, unnecessary_this, file_names, use_build_context_synchronously
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:waterwiseweb/Screens/addUser.dart';
 import 'package:waterwiseweb/Screens/bill.dart';
-import 'package:waterwiseweb/Screens/devices.dart';
-import 'package:waterwiseweb/Screens/all_users_screen.dart';
+import 'package:waterwiseweb/components/Devices/user_devices.dart';
+import 'package:waterwiseweb/components/Dashboard/all_users_screen.dart';
+import 'package:waterwiseweb/components/Registration/user_registration.dart';
 import 'package:waterwiseweb/constants/cons.dart';
 
 class Tabbar extends StatefulWidget {
   static const routeName = '/Tabbar';
-  const Tabbar({super.key});
+  const Tabbar({Key? key}) : super(key: key);
 
   @override
   State<Tabbar> createState() => _TabbarState();
@@ -18,11 +17,11 @@ class Tabbar extends StatefulWidget {
 class _TabbarState extends State<Tabbar> {
   int _selectedTab = 0;
   bool extended = false;
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void logout() async {
     await _auth.signOut();
+    // ignore: use_build_context_synchronously
     Navigator.of(context)
         .pushNamedAndRemoveUntil('/EmailPasswordLoginWM', (route) => true);
   }
@@ -38,36 +37,39 @@ class _TabbarState extends State<Tabbar> {
                   logout();
                 } else {
                   setState(() {
-                    this._selectedTab = index;
+                    _selectedTab = index;
                   });
                 }
               },
-              selectedItemColor: tBlue,
-              unselectedIconTheme: IconThemeData(
-                color: tBlack,
-              ),
-              unselectedItemColor: tBlack,
+              selectedItemColor: tWhite,
+              unselectedIconTheme: const IconThemeData(color: tWhite),
+              unselectedItemColor: tWhite,
               showUnselectedLabels: true,
-              items: [
+              items: const [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home_filled),
-                  label: "Users",
+                  label: "Home",
+                  backgroundColor: tBlue,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.map),
                   label: "Bill",
+                  backgroundColor: tBlue,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.person_2),
                   label: "Devices",
+                  backgroundColor: tBlue,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.person_add),
                   label: "Add user",
+                  backgroundColor: tBlue,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.logout),
                   label: "Logout",
+                  backgroundColor: tBlue,
                 ),
               ],
             )
@@ -79,10 +81,8 @@ class _TabbarState extends State<Tabbar> {
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: const Offset(0, 4),
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 7,
                   ),
                 ],
               ),
@@ -102,35 +102,19 @@ class _TabbarState extends State<Tabbar> {
                       });
                     }
                   },
+                  backgroundColor: tBlue,
                   extended: extended,
                   selectedIndex: _selectedTab,
-                  selectedIconTheme: IconThemeData(
-                    color: tBlue,
-                  ),
-                  selectedLabelTextStyle: TextStyle(
-                    color: tBlue,
-                  ),
+                  unselectedIconTheme:
+                      const IconThemeData(color: Colors.white, opacity: 1),
+                  unselectedLabelTextStyle:
+                      const TextStyle(color: Colors.white),
+                  selectedIconTheme: const IconThemeData(color: tBlue),
+                  labelType: extended
+                      ? NavigationRailLabelType.none
+                      : NavigationRailLabelType.selected,
                   destinations: [
-                    NavigationRailDestination(
-                      icon: Icon(Icons.home_filled),
-                      label: Text("Users"),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.map),
-                      label: Text("Bill"),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.person_2),
-                      label: Text("Devices"),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.person_add),
-                      label: Text("Add User"),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.logout),
-                      label: Text("Logout"),
-                    ),
+                    ...destinations,
                   ],
                 ),
               ),
@@ -138,22 +122,10 @@ class _TabbarState extends State<Tabbar> {
           Expanded(
             child: Stack(
               children: [
-                renderView(
-                  0,
-                  const AllUsersScreen(),
-                ),
-                renderView(
-                  1,
-                  Bill(),
-                ),
-                renderView(
-                  2,
-                  DeviceScreen(),
-                ),
-                renderView(
-                  3,
-                  const DialogueBox(),
-                ),
+                renderView(0, const AllUsersScreen()),
+                renderView(1, const Bill()),
+                renderView(2, DeviceScreen()),
+                renderView(3, const AddUser()),
               ],
             ),
           ),
@@ -161,6 +133,25 @@ class _TabbarState extends State<Tabbar> {
       ),
     );
   }
+
+  final List<NavigationRailDestination> destinations = [
+    const NavigationRailDestination(
+      icon: Icon(Icons.home_filled),
+      label: Text("Users"),
+    ),
+    const NavigationRailDestination(
+      icon: Icon(Icons.map),
+      label: Text("Bill"),
+    ),
+    const NavigationRailDestination(
+      icon: Icon(Icons.person_2),
+      label: Text("Devices"),
+    ),
+    const NavigationRailDestination(
+      icon: Icon(Icons.person_add),
+      label: Text("Add User"),
+    ),
+  ];
 
   Widget renderView(int tabIndex, Widget view) {
     return IgnorePointer(

@@ -4,6 +4,10 @@ class UserModel {
   final String role;
   final String firstName;
   final String lastName;
+  final String location;
+  final String deviceType;
+  final String deviceName;
+  final String deviceUID;
 
   UserModel({
     required this.uid,
@@ -11,6 +15,10 @@ class UserModel {
     required this.role,
     required this.firstName,
     required this.lastName,
+    required this.location,
+    required this.deviceType,
+    required this.deviceName,
+    required this.deviceUID,
   });
 
   String get fullName => '$firstName $lastName';
@@ -22,6 +30,10 @@ class UserModel {
       role: json['role'],
       firstName: json['firstName'],
       lastName: json['lastName'],
+      location: json['location'],
+      deviceType: json['deviceType'],
+      deviceName: json['deviceName'],
+      deviceUID: json['deviceUID'],
     );
   }
 }

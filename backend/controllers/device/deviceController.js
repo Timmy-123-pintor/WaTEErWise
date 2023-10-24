@@ -1,7 +1,6 @@
-import { getDeviceById, updateDeviceInDatabase, calculateCurrentUsage } from '../../services/device/deviceServices.js';
+import { getDeviceById, updateDeviceInDatabase, calculateCurrentUsage, getAllDevices } from '../../services/device/deviceServices.js';
 import { publish } from '../../services/mqtt/mqttService.js';
 import { auth as deviceAuth, db as deviceDb } from '../../firebase.js';
-
 
 export async function register(req, res) {
   try {
@@ -96,17 +95,26 @@ export async function updateDeviceStatus(req, res) {
   }
 }
 
-export async function listDevices(req, res) {
+export const listDevices = async (req, res) => {
   try {
-      // TODO: Fetch the list of devices from your database or service
-      
-      // For illustration, let's say devices is an array of device objects
-      const devices = []; 
-
-      // Send a successful response
+      const devices = await getAllDevices();
       res.status(200).json(devices);
   } catch (error) {
-      // Handle errors
-      res.status(500).json({ message: 'Failed to list devices', error: error.message });
+      res.status(500).json({ message: "Failed to load devices." });
+  }
+};
+
+export async function regenerateToken(req, res) {
+  try {
+    const deviceId = req.params.id;
+    // Regenerate a new token for the device
+    const newToken = "Your logic to generate a new token"; 
+
+    const ref = database().ref('/devices/' + deviceId);
+    await ref.update({ token: newToken });
+
+    res.status(200).send({ success: true, message: 'Token regenerated successfully' });
+  } catch (error) {
+    res.status(500).send({ success: false, message: error.message });
   }
 }

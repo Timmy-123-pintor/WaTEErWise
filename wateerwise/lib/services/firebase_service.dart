@@ -24,4 +24,22 @@ class FirebaseService {
   String get currentUserUid {
     return _auth.currentUser?.uid ?? '';
   }
+
+  Future<List<Map<String, dynamic>>> fetchAllDevices() async {
+    List<Map<String, dynamic>> devicesList = [];
+
+    DataSnapshot devicesSnapshot =
+        (await mainReference.child('devices').once()) as DataSnapshot;
+    if (devicesSnapshot.value != null && devicesSnapshot.value is Map) {
+      Map<String, dynamic> devices = Map.from(devicesSnapshot.value as Map);
+      devices.forEach((key, value) {
+        Map<String, dynamic> deviceData = Map.from(value as Map);
+        deviceData['lYW3ZLaRV2W6pTLAussJ49PVKq6LzZrQKojEZlkf'] =
+            key; // Add the Firebase node key to the device data
+        devicesList.add(deviceData);
+      });
+    }
+
+    return devicesList;
+  }
 }

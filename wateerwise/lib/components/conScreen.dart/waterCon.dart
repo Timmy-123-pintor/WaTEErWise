@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, deprecated_member_use
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,8 +29,7 @@ class _WaterConsumptionState extends State<WaterConsumption> {
     if (databaseReference != null) {
       return databaseReference!.onValue.map((event) => event.snapshot);
     } else {
-      return const Stream<
-          DataSnapshot>.empty(); // Return an empty stream if databaseReference is null
+      return const Stream<DataSnapshot>.empty();
     }
   }
 
@@ -52,43 +49,14 @@ class _WaterConsumptionState extends State<WaterConsumption> {
             stream: getFlowRateStream(),
             builder:
                 (BuildContext context, AsyncSnapshot<DataSnapshot> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
+              double displayValue = 0;
 
-              if (snapshot.hasError) {
-                if (kDebugMode) {
-                  print("StreamBuilder Error: ${snapshot.error}");
-                }
-                return Center(child: Text("Error: ${snapshot.error}"));
-              }
+              var snapValue = snapshot.data?.value;
 
-              var snapValue = snapshot.data?.value; // Use ?. for null safety
-              Widget content;
-
-              if (snapValue == null) {
-                content = const Text("No data available");
-              } else if (snapValue is double || snapValue is int) {
-                content = Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '$snapValue',
-                      style: GoogleFonts.quicksand(
-                        textStyle: conText1,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Current Water Consumption',
-                      style: GoogleFonts.quicksand(
-                        textStyle: conText2,
-                      ),
-                    ),
-                  ],
-                );
-              } else {
-                content = Text("Unexpected data type: $snapValue");
+              if (snapValue is int) {
+                displayValue = snapValue.toDouble();
+              } else if (snapValue is double) {
+                displayValue = snapValue;
               }
               return Stack(
                 children: [
@@ -111,16 +79,32 @@ class _WaterConsumptionState extends State<WaterConsumption> {
                         ),
                       ],
                     ),
-                    child: content,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '$displayValue',
+                          style: GoogleFonts.quicksand(
+                            textStyle: conText1,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Current Water Consumption',
+                          style: GoogleFonts.quicksand(
+                            textStyle: conText2,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   Positioned(
-                    top: 10, // adjust as needed
-                    right: 10, // adjust as needed
+                    top: 10,
+                    right: 10,
                     child: IconButton(
                       icon: const Icon(Icons.refresh),
                       onPressed: _reloadData,
-                      color:
-                          tBlue, // or any color that contrasts with your background
+                      color: tBlue,
                     ),
                   ),
                 ],

@@ -34,7 +34,7 @@ class _LatestState extends State<Latest> {
                 const DescriptionWidget(
                   title: 'Payment Confirmation',
                   description:
-                      'Your payment of 360 pesos, made on June 12, 2023, has been successfully\n processed.',
+                      'Your payment of 360 pesos, made on June 12, 2023',
                   subDescription: '3 hours ago',
                 ),
               ],
@@ -61,7 +61,7 @@ class _LatestState extends State<Latest> {
                 const DescriptionWidget(
                   title: 'Payment Confirmation',
                   description:
-                      'Your payment of 360 pesos, made on June 12, 2023, has been successfully\n processed.',
+                      'Your payment of 360 pesos, made on June 12, 2023',
                   subDescription: '3 hours ago',
                 ),
               ],
@@ -88,7 +88,7 @@ class _LatestState extends State<Latest> {
                 const DescriptionWidget(
                   title: 'Payment Confirmation',
                   description:
-                      'Your payment of 360 pesos, made on June 12, 2023, has been successfully\n processed.',
+                      'Your payment of 360 pesos, made on June 12, 2023',
                   subDescription: '3 hours ago',
                 ),
               ],
@@ -115,7 +115,7 @@ class _LatestState extends State<Latest> {
                 const DescriptionWidget(
                   title: 'Payment Confirmation',
                   description:
-                      'Your payment of 360 pesos, made on June 12, 2023, has been successfully\n processed.',
+                      'Your payment of 360 pesos, made on June 12, 2023',
                   subDescription: '3 hours ago',
                 ),
               ],
@@ -142,7 +142,7 @@ class _LatestState extends State<Latest> {
                 const DescriptionWidget(
                   title: 'Payment Confirmation',
                   description:
-                      'Your payment of 360 pesos, made on June 12, 2023, has been successfully\n processed.',
+                      'Your payment of 360 pesos, made on June 12, 2023',
                   subDescription: '3 hours ago',
                 ),
               ],
@@ -169,7 +169,7 @@ class _LatestState extends State<Latest> {
                 const DescriptionWidget(
                   title: 'Payment Confirmation',
                   description:
-                      'Your payment of 360 pesos, made on June 12, 2023, has been successfully\n processed.',
+                      'Your payment of 360 pesos, made on June 12, 2023',
                   subDescription: '3 hours ago',
                 ),
               ],
