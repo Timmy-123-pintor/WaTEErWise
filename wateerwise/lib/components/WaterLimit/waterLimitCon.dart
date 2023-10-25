@@ -44,7 +44,7 @@ class _InputTextFieldState extends State<InputTextField> {
         Provider.of<ProgressProvider>(context, listen: false);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
 
-    if (_controller.text.isEmpty) {
+    if (_controller.text.isEmpty || selectedValue == 'Choose') {
       setState(() {
         _hasError = true;
       });
@@ -64,6 +64,7 @@ class _InputTextFieldState extends State<InputTextField> {
   @override
   Widget build(BuildContext context) {
     final timerProvider = Provider.of<TimerProvider>(context);
+    final buttonStateProvider = Provider.of<ButtonStateProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -179,17 +180,26 @@ class _InputTextFieldState extends State<InputTextField> {
           GestureDetector(
             // onTap: _validateInput,
             onTap: () {
-              _validateInput();
               setState(() {
                 showError =
                     (_controller.text.isEmpty || selectedValue == 'Choose');
               });
+              if (buttonStateProvider.isSetButton) {
+                _validateInput();
+                if (!showError) {
+                  buttonStateProvider.setCancelButton();
+                }
+              } else {
+                buttonStateProvider.setSetButton();
+              }
             },
             child: Container(
               height: 41,
               width: MediaQuery.of(context).size.width * 0.85,
               decoration: BoxDecoration(
-                color: tBlue, // Set the container color to tBlue
+                color: buttonStateProvider.isSetButton
+                    ? tBlue
+                    : tRed, // Set the container color to tBlue
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
@@ -200,15 +210,17 @@ class _InputTextFieldState extends State<InputTextField> {
                   ),
                 ],
               ),
-              child: const Center(
+              child: Center(
                 child: Text(
-                  "Set",
-                  style: TextStyle(color: tWhite), // Set text color to tWhite
+                  buttonStateProvider.isSetButton ? "Set" : "Cancel",
+                  style: const TextStyle(
+                      color: tWhite), // Set text color to tWhite
                 ),
               ),
             ),
           ),
-          if (timerProvider.timerDurationInSeconds > 0)
+          if (!buttonStateProvider.isSetButton &&
+              timerProvider.timerDurationInSeconds > 0)
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(

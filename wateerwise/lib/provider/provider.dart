@@ -70,3 +70,23 @@ class TimerProvider with ChangeNotifier {
     notifyListeners();
   }
 }
+
+class ButtonStateProvider with ChangeNotifier {
+  bool _isSetButton = true;
+  bool _isCancelButton = false;
+
+  bool get isSetButton => _isSetButton;
+  bool get isCancelButton => _isCancelButton;
+
+  void setSetButton() {
+    _isSetButton = true;
+    _isCancelButton = false;
+    notifyListeners();
+  }
+
+  void setCancelButton() {
+    _isSetButton = false;
+    _isCancelButton = true;
+    notifyListeners();
+  }
+}

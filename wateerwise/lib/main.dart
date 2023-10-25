@@ -41,6 +41,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => TimerProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => ButtonStateProvider(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
