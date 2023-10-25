@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class ProgressProvider extends ChangeNotifier {
   double _maxValue = 100;
@@ -18,6 +19,54 @@ class PhoneNumberProvider extends ChangeNotifier {
 
   set phoneNumber(String value) {
     _phoneNumber = value;
+    notifyListeners();
+  }
+}
+
+class TimerProvider with ChangeNotifier {
+  String _selectedDuration = 'Choose';
+  int _timerDurationInSeconds = 0;
+  Timer? _timer;
+
+  String get selectedDuration => _selectedDuration;
+  int get timerDurationInSeconds => _timerDurationInSeconds;
+
+  int get daysLeft => (_timerDurationInSeconds / (24 * 60 * 60)).floor();
+  int get hoursLeft =>
+      ((_timerDurationInSeconds % (24 * 60 * 60)) / 3600).floor();
+  int get minutesLeft => ((_timerDurationInSeconds % 3600) / 60).floor();
+
+  void setDuration(String duration) {
+    _selectedDuration = duration;
+
+    if (duration == '1 Week') {
+      _timerDurationInSeconds = 7 * 24 * 60 * 60;
+    } else if (duration == '2 Weeks') {
+      _timerDurationInSeconds = 14 * 24 * 60 * 60;
+    } else if (duration == '1 Month') {
+      _timerDurationInSeconds = 28 * 24 * 60 * 60;
+    }
+
+    notifyListeners();
+  }
+
+  void startTimer() {
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_timerDurationInSeconds > 0) {
+        _timerDurationInSeconds--;
+        notifyListeners();
+      } else {
+        stopTimer();
+      }
+    });
+  }
+
+  void stopTimer() {
+    _timer?.cancel();
+    _timerDurationInSeconds = 0;
     notifyListeners();
   }
 }

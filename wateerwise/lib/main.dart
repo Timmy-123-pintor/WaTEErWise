@@ -38,6 +38,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => ProgressProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => TimerProvider(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -42,6 +42,7 @@ class _InputTextFieldState extends State<InputTextField> {
   void _validateInput() {
     final progressProvider =
         Provider.of<ProgressProvider>(context, listen: false);
+    final timerProvider = Provider.of<TimerProvider>(context, listen: false);
 
     if (_controller.text.isEmpty) {
       setState(() {
@@ -54,12 +55,15 @@ class _InputTextFieldState extends State<InputTextField> {
       final newValue = double.tryParse(_controller.text);
       if (newValue != null) {
         progressProvider.setMaxValue(newValue);
+        timerProvider.setDuration(selectedValue);
+        timerProvider.startTimer();
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final timerProvider = Provider.of<TimerProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -136,62 +140,6 @@ class _InputTextFieldState extends State<InputTextField> {
                 ),
                 child: Center(
                   child: DropdownButtonHideUnderline(
-                    // child: DropdownButton2<String>(
-                    //   isExpanded: true,
-                    //   hint: const Text('Select Duration'),
-                    //   value: selectedValue,
-                    //   onChanged: (newValue) {
-                    //     setState(() {
-                    //       selectedValue = newValue!;
-                    //       showError = false;
-                    //     });
-                    //   },
-                    //   items: [
-                    //     DropdownMenuItem<String>(
-                    //       value: 'Choose',
-                    //       child: Center(
-                    //         child: Text(
-                    //           'Choose',
-                    //           style: GoogleFonts.quicksand(
-                    //             textStyle: navText,
-                    //             color:
-                    //                 selectedValue == 'Choose' ? tBlue : tBlack,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     DropdownMenuItem<String>(
-                    //       value: '30 seconds',
-                    //       child: Center(
-                    //         child: Text(
-                    //           '30 seconds',
-                    //           style: GoogleFonts.quicksand(
-                    //             textStyle: navText,
-                    //             color: selectedValue == '30 seconds'
-                    //                 ? tBlue
-                    //                 : tBlack,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     DropdownMenuItem<String>(
-                    //       value: '1 minute',
-                    //       child: Center(
-                    //         child: Text(
-                    //           '1 minute',
-                    //           style: GoogleFonts.quicksand(
-                    //             textStyle: navText,
-                    //             color: selectedValue == '1 minute'
-                    //                 ? tBlue
-                    //                 : tBlack,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    //   underline: Container(), // Hide the default underline
-                    //   style: const TextStyle(fontSize: 18),
-                    // ),
                     child: DropdownButton2<String>(
                       isExpanded: true,
                       hint: Text(
@@ -215,11 +163,7 @@ class _InputTextFieldState extends State<InputTextField> {
                           selectedValue = value!;
                         });
                       },
-                      buttonStyleData: const ButtonStyleData(
-                          // padding: EdgeInsets.symmetric(horizontal: 16),
-                          // height: 40,
-                          // width: 140,
-                          ),
+                      buttonStyleData: const ButtonStyleData(),
                       menuItemStyleData: const MenuItemStyleData(
                         height: 40,
                       ),
@@ -264,6 +208,20 @@ class _InputTextFieldState extends State<InputTextField> {
               ),
             ),
           ),
+          if (timerProvider.timerDurationInSeconds > 0)
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: tWhite,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'Timer: ${timerProvider.daysLeft} days, ${timerProvider.hoursLeft} hours, and ${timerProvider.minutesLeft} minutes left',
+                style: GoogleFonts.quicksand(
+                  textStyle: text15Blue,
+                ),
+              ),
+            ),
           if (showError)
             Padding(
               padding: const EdgeInsets.only(top: 8),
