@@ -12,7 +12,7 @@ const tGray2 = Color.fromARGB(255, 197, 197, 197);
 const tGreen = Color(0XFF3F8B35);
 const tBlackG = Color.fromARGB(255, 66, 66, 66);
 const tOrange = Color(0XFFFFA500);
-const tRed = Color(0xFFFF9494);
+const tRed = Color.fromARGB(255, 233, 72, 72);
 const mainGridLineColor = Colors.white10;
 
 List<Color> gradientColors = [const Color(0xFF3464D4), const Color(0XFF5186FF)];
