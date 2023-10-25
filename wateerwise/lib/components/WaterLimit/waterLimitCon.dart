@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,6 +20,13 @@ class _InputTextFieldState extends State<InputTextField> {
   bool _hasError = false;
   bool showError = false;
   String selectedValue = 'Choose';
+
+  final List<String> items = [
+    'Choose',
+    '1 Week',
+    '2 Weeks',
+    '1 Month',
+  ];
 
   @override
   void initState() {
@@ -83,7 +91,7 @@ class _InputTextFieldState extends State<InputTextField> {
                 child: TextField(
                   controller: _controller,
                   decoration: InputDecoration(
-                    labelText: 'Enter Value',
+                    labelText: 'Enter Value here',
                     errorText:
                         _hasError ? 'Please input your desired limit' : null,
                     border: InputBorder.none,
@@ -119,7 +127,7 @@ class _InputTextFieldState extends State<InputTextField> {
                   borderRadius: const BorderRadius.all(Radius.circular(8)),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.5), // Shadow color
+                      color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 2,
                       blurRadius: 5,
                       offset: const Offset(0, 4),
@@ -127,48 +135,95 @@ class _InputTextFieldState extends State<InputTextField> {
                   ],
                 ),
                 child: Center(
-                  child: DropdownButton<String>(
-                    value: selectedValue,
-                    onChanged: (newValue) {
-                      setState(() {
-                        selectedValue = newValue!;
-                        showError = false;
-                      });
-                    },
-                    underline: Container(), // or SizedBox.shrink()
-                    items: [
-                      DropdownMenuItem<String>(
-                        value: 'Choose',
-                        child: Text(
-                          'Choose',
-                          style: GoogleFonts.quicksand(
-                              textStyle: navText,
-                              color:
-                                  selectedValue == 'Choose' ? tBlue : tBlack),
-                        ),
+                  child: DropdownButtonHideUnderline(
+                    // child: DropdownButton2<String>(
+                    //   isExpanded: true,
+                    //   hint: const Text('Select Duration'),
+                    //   value: selectedValue,
+                    //   onChanged: (newValue) {
+                    //     setState(() {
+                    //       selectedValue = newValue!;
+                    //       showError = false;
+                    //     });
+                    //   },
+                    //   items: [
+                    //     DropdownMenuItem<String>(
+                    //       value: 'Choose',
+                    //       child: Center(
+                    //         child: Text(
+                    //           'Choose',
+                    //           style: GoogleFonts.quicksand(
+                    //             textStyle: navText,
+                    //             color:
+                    //                 selectedValue == 'Choose' ? tBlue : tBlack,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     DropdownMenuItem<String>(
+                    //       value: '30 seconds',
+                    //       child: Center(
+                    //         child: Text(
+                    //           '30 seconds',
+                    //           style: GoogleFonts.quicksand(
+                    //             textStyle: navText,
+                    //             color: selectedValue == '30 seconds'
+                    //                 ? tBlue
+                    //                 : tBlack,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     DropdownMenuItem<String>(
+                    //       value: '1 minute',
+                    //       child: Center(
+                    //         child: Text(
+                    //           '1 minute',
+                    //           style: GoogleFonts.quicksand(
+                    //             textStyle: navText,
+                    //             color: selectedValue == '1 minute'
+                    //                 ? tBlue
+                    //                 : tBlack,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    //   underline: Container(), // Hide the default underline
+                    //   style: const TextStyle(fontSize: 18),
+                    // ),
+                    child: DropdownButton2<String>(
+                      isExpanded: true,
+                      hint: Text(
+                        'Select Duration',
+                        style: GoogleFonts.quicksand(textStyle: navText),
                       ),
-                      DropdownMenuItem<String>(
-                        value: '30 seconds',
-                        child: Text(
-                          '30 seconds',
-                          style: GoogleFonts.quicksand(
-                              textStyle: navText,
-                              color: selectedValue == '30 seconds'
-                                  ? tBlue
-                                  : tBlack),
-                        ),
+                      items: items
+                          .map((String item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                      value: selectedValue,
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedValue = value!;
+                        });
+                      },
+                      buttonStyleData: const ButtonStyleData(
+                          // padding: EdgeInsets.symmetric(horizontal: 16),
+                          // height: 40,
+                          // width: 140,
+                          ),
+                      menuItemStyleData: const MenuItemStyleData(
+                        height: 40,
                       ),
-                      DropdownMenuItem<String>(
-                        value: '1 minute',
-                        child: Text(
-                          '1 minute',
-                          style: GoogleFonts.quicksand(
-                              textStyle: navText,
-                              color:
-                                  selectedValue == '1 minute' ? tBlue : tBlack),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
