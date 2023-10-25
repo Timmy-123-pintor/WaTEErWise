@@ -23,6 +23,7 @@ dependencies:
   shared_preferences: ^2.2.0
   image_picker: ^1.0.4
   syncfusion_flutter_gauges: ^23.1.41
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:
