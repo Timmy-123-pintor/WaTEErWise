@@ -37,6 +37,7 @@ class _AddUserState extends State<AddUser> {
     'Sitio Kaimito, Lawaan II',
   ];
   String? selectedDeviceType;
+  String? selectedLocation;
 
   @override
   void dispose() {
@@ -76,20 +77,29 @@ class _AddUserState extends State<AddUser> {
                 if (isDesktop(context))
                   Container(
                     width: MediaQuery.of(context).size.width / 3,
-                    height: MediaQuery.of(context).size.height / 1.5,
-                    decoration: const BoxDecoration(
+                    height: MediaQuery.of(context).size.height / 1,
+                    decoration: BoxDecoration(
                       color: tBlue,
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(10),
                         bottomLeft: Radius.circular(10),
                       ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 4,
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           'WaterWise+',
                           style: GoogleFonts.quicksand(
-                            textStyle: waterWhite,
+                            textStyle: waterWhite.copyWith(fontSize: 28),
                           ),
                         ),
                       ],
@@ -99,11 +109,8 @@ class _AddUserState extends State<AddUser> {
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: const BoxDecoration(
-                      color: tGray,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(10),
-                        bottomRight: Radius.circular(10),
-                      ),
+                      color: tWhite,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     child: SingleChildScrollView(
                       child: Column(
@@ -144,10 +151,10 @@ class _AddUserState extends State<AddUser> {
                             items: locations,
                             onChanged: (String? value) {
                               setState(() {
-                                selectedDeviceType = value;
+                                selectedLocation = value;
                               });
                             },
-                            value: selectedDeviceType,
+                            value: selectedLocation,
                             icon: Icons.location_on_outlined,
                           ),
                           const SizedBox(height: 16),
@@ -187,24 +194,32 @@ class _AddUserState extends State<AddUser> {
                             icon: Icons.device_hub,
                           ),
                           const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              _buildButton(
-                                text: 'Cancel',
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const Tabbar(),
-                                    ),
-                                  );
-                                },
-                                color: tBlue,
+                          Row(children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: _buildButton(
+                                  text: 'Cancel',
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const Tabbar(),
+                                      ),
+                                    );
+                                  },
+                                  color: tBlue,
+                                  textColor: tWhite,
+                                ),
                               ),
-                              _buildRegisterButton(context),
-                            ],
-                          ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: _buildRegisterButton(context),
+                              ),
+                            ),
+                          ]),
                         ],
                       ),
                     ),
@@ -280,13 +295,14 @@ class _AddUserState extends State<AddUser> {
       ),
       child: Row(
         children: [
+          Icon(icon, color: tBlue),
           Expanded(
             child: DropdownButtonHideUnderline(
               child: DropdownButton2<String>(
                 isExpanded: true,
                 hint: Text(
                   hint,
-                  style: const TextStyle(color: tGray),
+                  style: const TextStyle(color: tWhite),
                   overflow: TextOverflow.ellipsis,
                 ),
                 items: items.map((String item) {
@@ -294,7 +310,7 @@ class _AddUserState extends State<AddUser> {
                     value: item,
                     child: Text(
                       item,
-                      style: const TextStyle(color: tBlack),
+                      style: const TextStyle(color: tBlue),
                       overflow: TextOverflow.ellipsis,
                     ),
                   );
@@ -314,19 +330,26 @@ class _AddUserState extends State<AddUser> {
     required String text,
     required VoidCallback onPressed,
     required Color color,
+    required Color textColor,
   }) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         side: BorderSide(color: color, width: 2),
-        minimumSize: const Size(100, 50),
+        minimumSize: const Size(double.infinity, 50), // Updated this line
         padding: const EdgeInsets.all(10),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
       ),
-      child: Text(text),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: textColor,
+          fontFamily: 'Quicksand',
+        ),
+      ),
     );
   }
 
@@ -342,6 +365,7 @@ class _AddUserState extends State<AddUser> {
           final deviceName = _deviceNameController.text.trim();
           final deviceUID = _deviceUIDController.text.trim();
           final deviceType = selectedDeviceType;
+          final location = selectedLocation;
 
           try {
             var response = await http.post(
@@ -354,6 +378,7 @@ class _AddUserState extends State<AddUser> {
                 'lastName': lastName,
                 'email': email,
                 'password': password,
+                'location': location,
                 'device': {
                   'name': deviceName,
                   'uid': deviceUID,
