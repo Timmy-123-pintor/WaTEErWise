@@ -1,6 +1,6 @@
 import { getDeviceById, updateDeviceInDatabase, calculateCurrentUsage } from '../../services/device/deviceServices.js';
-import { publish } from '../../services/mqtt/mqttService.js';
 import { auth as deviceAuth, db as deviceDb } from '../../firebase.js';
+import { connect as connectMQTT, publish } from '../../services/mqtt/mqttService.js';
 
 
 export async function register(req, res) {
