@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, deprecated_member_use, unnecessary_import
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
