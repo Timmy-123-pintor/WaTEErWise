@@ -2,28 +2,30 @@ import mqtt from 'mqtt';
 
 let client = null;
 
-export const connect = () => {
+const connect = () => {
     if (!client) {
         // Adjust the broker URL as needed
-        client = mqtt.connect('mqtt://localhost:1883');
+        const options = {
+            username: 'waterwiseplus.20@gmail.com', 
+            password: 'waterwise+20?' 
+        };
+
+        // Pass the options object to the connect function
+        client = mqtt.connect('mqtt://broker.emqx.io:1883', options);
 
         client.on('connect', () => {
             console.log('Connected to MQTT Broker');
-
             // Subscribe to the dynamic topics
             client.subscribe('sensor/+/status');
             client.subscribe('sensor/+/data');
             client.subscribe('sensor/+/alert');
-
             // Configure LWT for the client
             client.publish('sensor/your_device_id/status', 'online', { retain: true });
         });
 
         client.on('message', (topic, message) => {
             const [type, deviceId, category] = topic.split('/');
-
             if (type !== 'sensor') return;
-
             switch (category) {
                 case 'status':
                     handleDeviceStatus(deviceId, message.toString());
@@ -38,37 +40,49 @@ export const connect = () => {
                     console.log(`Received message on unhandled topic: ${topic}`);
             }
         });
+
+        client.on('error', (error) => {
+            console.error('MQTT Connection Error:', error);
+        });
     }
 };
 
-export const publish = (topic, message) => {
+const publish = (topic, message) => {
     if (client && client.connected) {
         client.publish(topic, message);
+    } else {
+        console.error('MQTT Publish Error: Client not connected');
     }
 };
 
-export const subscribe = (topic) => {
+const subscribe = (topic) => {
     if (client && client.connected) {
         client.subscribe(topic);
+    } else {
+        console.error('MQTT Subscribe Error: Client not connected');
     }
 };
 
-function handleDeviceStatus(deviceId, status) {
+const handleDeviceStatus = (deviceId, status) => {
     if (status === 'offline') {
-        // Notify relevant parties that the device is offline
         console.log(`Device ${deviceId} is offline.`);
-        // You can send notifications, update a status in your database, or trigger actions as needed.
+        // Implement additional actions as needed
     }
-}
+};
 
-function storeDeviceData(deviceId, data) {
-    // Store the incoming data in your database
+const storeDeviceData = (deviceId, data) => {
     console.log(`Received data from device ${deviceId}: ${data}`);
-    // Implement your database storage logic here.
-}
+    // Implement database storage logic here
+};
 
-function handleDeviceAlert(deviceId, alertMessage) {
-    // Handle critical alerts and notify the relevant parties
+const handleDeviceAlert = (deviceId, alertMessage) => {
     console.log(`Received alert from device ${deviceId}: ${alertMessage}`);
-    // Implement your alert handling and notification logic here.
-}
+    // Implement alert handling logic here
+};
+
+export {
+    connect,
+    publish,
+    subscribe,
+    // Export any other functions you might add
+};
