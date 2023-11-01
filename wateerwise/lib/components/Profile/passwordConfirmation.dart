@@ -59,43 +59,6 @@ class _PasswordConfirmationState extends State<PasswordConfirmation> {
               color: _isPasswordCorrect ? tBlack : tRed,
             ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              TextButton(
-                onPressed: () async {
-                  // Implement your "Forgot Password" logic here.
-                  final user = FirebaseAuth.instance.currentUser;
-                  if (user != null) {
-                    try {
-                      await FirebaseAuth.instance.sendPasswordResetEmail(
-                        email: user.email!,
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Password reset email sent.'),
-                        ),
-                      );
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Error: Unable to send reset email.'),
-                        ),
-                      );
-                    }
-                  }
-                },
-                child: Text(
-                  'Forgot Password?',
-                  style: GoogleFonts.quicksand(
-                    textStyle: text12Blue,
-                  ),
-                ),
-              ),
-            ],
-          )
         ],
       ),
       actions: [
@@ -121,7 +84,6 @@ class _PasswordConfirmationState extends State<PasswordConfirmation> {
             ),
           ),
           onPressed: () async {
-            // Verify the password with Firebase.
             _isPasswordCorrect =
                 await _verifyPassword(_passwordController.text);
             if (_isPasswordCorrect) {
@@ -137,13 +99,13 @@ class _PasswordConfirmationState extends State<PasswordConfirmation> {
 
   Future<bool> _verifyPassword(String? enteredPassword) async {
     if (enteredPassword == null) {
-      // Handle the case where enteredPassword is null.
       return false; // Password is incorrect.
     }
 
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
+        // Use the current user's email and the entered password to reauthenticate.
         final AuthCredential credential = EmailAuthProvider.credential(
             email: user.email!, password: enteredPassword);
         await user.reauthenticateWithCredential(credential);
@@ -152,6 +114,8 @@ class _PasswordConfirmationState extends State<PasswordConfirmation> {
     } catch (e) {
       if (kDebugMode) {
         print('Password verification error: $e');
+        print('Error code: ${e.toString}');
+        print('Error message: ${e.toString}');
       }
     }
     return false; // Password is incorrect.

@@ -10,6 +10,7 @@ import 'package:wateerwise/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
+import 'package:wateerwise/services/firebase_auth_methods.dart';
 
 class UserEditDetails extends StatefulWidget {
   const UserEditDetails({Key? key}) : super(key: key);
@@ -23,6 +24,23 @@ class _UserEditDetailsState extends State<UserEditDetails> {
   final TextEditingController passwordController = TextEditingController();
   bool isEditMode = false;
   String userName = '';
+  String userEmail = '';
+
+  void fetchUserDetails() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        setState(() {
+          userEmail = user.email ?? '';
+          userName = user.displayName ?? '';
+        });
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error fetching user email: $error');
+      }
+    }
+  }
 
   Future<bool> _openPasswordConfirmation(BuildContext context) async {
     final isPasswordConfirmed = await showDialog<bool>(
@@ -32,6 +50,15 @@ class _UserEditDetailsState extends State<UserEditDetails> {
       },
     );
     return isPasswordConfirmed ?? false;
+  }
+
+  void updatePhoneNumber() {
+    final phoneNumberProvider =
+        Provider.of<PhoneNumberProvider>(context, listen: false);
+    final newPhoneNumber = phoneNumberController.text;
+
+    FirebaseAuthMethods(FirebaseAuth.instance)
+        .updateUserPhoneNumber(newPhoneNumber, phoneNumberProvider);
   }
 
   @override
@@ -65,25 +92,7 @@ class _UserEditDetailsState extends State<UserEditDetails> {
   Widget build(BuildContext context) {
     final phoneNumberProvider =
         Provider.of<PhoneNumberProvider>(context, listen: false);
-    String userEmail = '';
-
-    void fetchUserEmail() async {
-      try {
-        User? user = FirebaseAuth.instance.currentUser;
-        if (user != null) {
-          setState(() {
-            userEmail = user.email ?? '';
-            userName = user.displayName ?? '';
-          });
-        }
-      } catch (error) {
-        if (kDebugMode) {
-          print('Error fetching user email: $error');
-        }
-      }
-    }
-
-    fetchUserEmail();
+    fetchUserDetails();
 
     return WillPopScope(
       onWillPop: () async {
@@ -240,11 +249,12 @@ class _UserEditDetailsState extends State<UserEditDetails> {
                       ),
                       if (isEditMode)
                         TextButton(
-                          onPressed: () {
-                            phoneNumberProvider.phoneNumber =
-                                phoneNumberController.text;
-                            _unfocusTextField();
-                          },
+                          onPressed: updatePhoneNumber,
+                          // () {
+                          //   phoneNumberProvider.phoneNumber =
+                          //       phoneNumberController.text;
+                          //   _unfocusTextField();
+                          // },
                           child: const Text(
                             "Set",
                             style: TextStyle(
