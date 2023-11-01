@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wateerwise/models/user_model.dart';
+import 'package:wateerwise/provider/provider.dart';
 import 'package:wateerwise/utils/showSnackbar.dart';
 
 class FirebaseAuthMethods {
@@ -43,6 +44,7 @@ class FirebaseAuthMethods {
             'lastName': lastName,
             'email': email,
             'role': 'user',
+            // 'contactNumber': updateUserPhoneNumber,
           })
           .then((value) => print("User Added"))
           .catchError((error) => print("Failed to add user: $error"));
@@ -187,6 +189,29 @@ class FirebaseAuthMethods {
       showSnackBar(context, e.message!); // Displaying the error message
       // if an error of requires-recent-login is thrown, make sure to log
       // in user again and then delete account.
+    }
+  }
+
+  //added phone number data
+  Future<void> updateUserPhoneNumber(
+      String newPhoneNumber, PhoneNumberProvider phoneNumberProvider) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final userId = user.uid;
+        final userReference =
+            FirebaseFirestore.instance.collection('users').doc(userId);
+
+        userReference.update({
+          'contactNumber': newPhoneNumber,
+        }).then((_) {
+          print('Contact number updated successfully');
+        }).catchError((error) {
+          print('Error updating contact number: $error');
+        });
+      }
+    } catch (error) {
+      print('Error updating contact number: $error');
     }
   }
 }

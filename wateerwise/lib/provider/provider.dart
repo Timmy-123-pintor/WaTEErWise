@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:wateerwise/components/WaterLimit/limitSummary.dart';
+
 class ProgressProvider extends ChangeNotifier {
   double _maxValue = 100;
 
@@ -8,6 +10,13 @@ class ProgressProvider extends ChangeNotifier {
 
   void setMaxValue(double newValue) {
     _maxValue = newValue;
+    notifyListeners();
+  }
+
+  String _selectedValue = 'Choose';
+  String get selectedValue => _selectedValue;
+  set selectedValue(String value) {
+    _selectedValue = value;
     notifyListeners();
   }
 }
@@ -88,5 +97,23 @@ class ButtonStateProvider with ChangeNotifier {
     _isSetButton = false;
     _isCancelButton = true;
     notifyListeners();
+  }
+}
+
+class SummaryDialogProvider with ChangeNotifier {
+  void showSummaryDialog(
+    BuildContext context,
+    String cubicMeter,
+    String timeDuration,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SummaryDialog(
+          cubicMeter: double.tryParse(cubicMeter) ?? 0,
+          timeDuration: timeDuration,
+        );
+      },
+    );
   }
 }

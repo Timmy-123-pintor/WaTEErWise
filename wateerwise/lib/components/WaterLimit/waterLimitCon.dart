@@ -1,5 +1,4 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -43,7 +42,6 @@ class _InputTextFieldState extends State<InputTextField> {
     final progressProvider =
         Provider.of<ProgressProvider>(context, listen: false);
     final timerProvider = Provider.of<TimerProvider>(context, listen: false);
-
     if (_controller.text.isEmpty || selectedValue == 'Choose') {
       setState(() {
         _hasError = true;
@@ -52,6 +50,7 @@ class _InputTextFieldState extends State<InputTextField> {
       setState(() {
         _hasError = false;
       });
+
       final newValue = double.tryParse(_controller.text);
       if (newValue != null) {
         progressProvider.setMaxValue(newValue);
@@ -59,6 +58,17 @@ class _InputTextFieldState extends State<InputTextField> {
         timerProvider.startTimer();
       }
     }
+  }
+
+  void _showSummaryDialog(BuildContext context) {
+    final summaryProvider =
+        Provider.of<SummaryDialogProvider>(context, listen: false);
+
+    summaryProvider.showSummaryDialog(
+      context,
+      _controller.text,
+      selectedValue,
+    );
   }
 
   @override
@@ -74,7 +84,7 @@ class _InputTextFieldState extends State<InputTextField> {
               AnimatedContainer(
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.linear,
-                height: 43,
+                height: 50,
                 width: MediaQuery.of(context).size.width * 0.4,
                 decoration: BoxDecoration(
                   color: tWhite,
@@ -99,6 +109,8 @@ class _InputTextFieldState extends State<InputTextField> {
                     labelText: 'Enter Value here',
                     errorText:
                         _hasError ? 'Please input your desired limit' : null,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 0.0, vertical: 3.0),
                     border: InputBorder.none,
                   ),
                   keyboardType: TextInputType.number,
@@ -120,7 +132,7 @@ class _InputTextFieldState extends State<InputTextField> {
               AnimatedContainer(
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.linear,
-                height: 45,
+                height: 50,
                 width: MediaQuery.of(context).size.width * 0.4,
                 decoration: BoxDecoration(
                   color: tWhite,
@@ -188,6 +200,7 @@ class _InputTextFieldState extends State<InputTextField> {
                 _validateInput();
                 if (!showError) {
                   buttonStateProvider.setCancelButton();
+                  _showSummaryDialog(context);
                 }
               } else {
                 buttonStateProvider.setSetButton();
