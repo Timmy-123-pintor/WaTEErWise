@@ -17,10 +17,14 @@ class FirebaseAuthMethods {
 
   // EMAIL SIGN UP
   Future<void> signUpWithEmail({
-    required String email,
-    required String password,
     required String firstName,
     required String lastName,
+    required String email,
+    required String password,
+    required String location,
+    required String deviceName,
+    required String deviceUID,
+    required String deviceType,
     required BuildContext context,
   }) async {
     try {
@@ -42,7 +46,11 @@ class FirebaseAuthMethods {
             'firstName': firstName,
             'lastName': lastName,
             'email': email,
-            'role': 'user', 
+            'role': 'user',
+            'location': location,
+            'deviceName': deviceName,
+            'deviceUID': deviceUID,
+            'deviceType': deviceType,
           })
           .then((value) => print("User Added"))
           .catchError((error) => print("Failed to add user: $error"));
@@ -63,8 +71,7 @@ class FirebaseAuthMethods {
           print('The account already exists for that email.');
         }
       }
-      showSnackBar(
-          context, e.message!);
+      showSnackBar(context, e.message!);
     }
   }
 
@@ -78,6 +85,13 @@ class FirebaseAuthMethods {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
 
+      // Check if user is an admin after successful login
+      String? role = await getUserRole(userCredential.user!.uid);
+      if (role != 'admin') {
+        throw FirebaseAuthException(
+            code: 'not-admin', message: 'Only admin accounts can log in here.');
+      }
+
       return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -88,11 +102,15 @@ class FirebaseAuthMethods {
         if (kDebugMode) {
           print('Wrong password provided for that user.');
         }
+      } else if (e.code == 'not-admin') {
+        if (kDebugMode) {
+          print(e.message);
+        }
       }
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login Failed!')),
       );
-      
+
       rethrow; // Re-throw the exception to be caught by the calling method
     }
   }
@@ -103,7 +121,7 @@ class FirebaseAuthMethods {
       _auth.currentUser!.sendEmailVerification();
       showSnackBar(context, 'Email verification sent!');
     } on FirebaseAuthException catch (e) {
-      showSnackBar(context, e.message!); 
+      showSnackBar(context, e.message!);
     }
   }
 
@@ -150,13 +168,13 @@ class FirebaseAuthMethods {
 
     if (kDebugMode) {
       print('Fetched ${userDocs.docs.length} user(s)');
-    } 
+    }
 
     for (var userDoc in userDocs.docs) {
       var data = userDoc.data();
       if (kDebugMode) {
         print('Data for user ${userDoc.id}: $data');
-      } 
+      }
       users.add(
         UserModel(
           uid: userDoc.id,
@@ -164,9 +182,13 @@ class FirebaseAuthMethods {
           role: data['role'] as String? ?? 'user',
           firstName: data['firstName'] as String? ?? '',
           lastName: data['lastName'] as String? ?? '',
+          location: data['location'] as String? ?? '',
+          deviceType: data['deviceType'] as String? ?? '',
+          deviceName: data['deviceName'] as String? ?? '',
+          deviceUID: data['deviceUID'] as String? ?? '',
         ),
       );
-        }
+    }
     return users;
   }
 
@@ -175,19 +197,26 @@ class FirebaseAuthMethods {
     try {
       await _auth.signOut();
     } on FirebaseAuthException catch (e) {
-      showSnackBar(context, e.message!); 
+      showSnackBar(context, e.message!);
     }
   }
 
   // DELETE ACCOUNT
-  Future<void> deleteAccount(BuildContext context) async {
+  Future<void> deleteUser(String uid, BuildContext context) async {
     try {
-      await _auth.currentUser!.delete();
-      // Do something after successful account deletion (e.g., navigate to login screen)
-    } on FirebaseAuthException catch (e) {
-      showSnackBar(context, e.message!); // Displaying the error message
-      // if an error of requires-recent-login is thrown, make sure to log
-      // in user again and then delete account.
+      // Delete the user document from Firestore
+      await FirebaseFirestore.instance.collection('users').doc(uid).delete();
+      // Optionally, delete the user from Firebase Auth as well
+      // Note: This requires the user to be signed in and have the appropriate permissions
+      // await FirebaseAuth.instance.currentUser!.delete();
+
+      showSnackBar(context, 'User deleted successfully');
+      // You may want to set state or refresh the user list here as well.
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error deleting user: $e');
+      }
+      showSnackBar(context, 'Error deleting user');
     }
   }
 }
