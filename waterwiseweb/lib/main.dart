@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         home: const MyAppHome(),
         routes: {
           EmailPasswordLogin.routeName: (context) => const EmailPasswordLogin(),
-          Tabbar.routeName: (context) => const Tabbar(),
+          Tabbar.routeName: (context) => Tabbar(),
         },
       ),
     );
@@ -54,7 +54,7 @@ class MyAppHome extends StatelessWidget {
     final firebaseUser = context.watch<User?>();
 
     return Scaffold(
-      body: firebaseUser != null ? const Tabbar() : const EmailPasswordLogin(),
+      body: firebaseUser != null ? Tabbar() : const EmailPasswordLogin(),
     );
   }
 }

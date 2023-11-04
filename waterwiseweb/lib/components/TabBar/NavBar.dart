@@ -1,15 +1,13 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, unnecessary_this, file_names, use_build_context_synchronously
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:waterwiseweb/Screens/addUser.dart';
 import 'package:waterwiseweb/Screens/bill.dart';
-import 'package:waterwiseweb/Screens/devices.dart';
-import 'package:waterwiseweb/Screens/all_users_screen.dart';
+import 'package:waterwiseweb/components/Dashboard/all_users_screen.dart';
+import 'package:waterwiseweb/components/Devices/user_devices.dart';
 import 'package:waterwiseweb/constants/cons.dart';
 
 class Tabbar extends StatefulWidget {
   static const routeName = '/Tabbar';
-  const Tabbar({super.key});
+  const Tabbar({Key? key}) : super(key: key);
 
   @override
   State<Tabbar> createState() => _TabbarState();
@@ -24,7 +22,7 @@ class _TabbarState extends State<Tabbar> {
   void logout() async {
     await _auth.signOut();
     Navigator.of(context)
-        .pushNamedAndRemoveUntil('/EmailPasswordLoginWM', (route) => true);
+        .pushNamedAndRemoveUntil('/EmailPasswordLoginWM', (route) => false);
   }
 
   @override
@@ -38,62 +36,49 @@ class _TabbarState extends State<Tabbar> {
                   logout();
                 } else {
                   setState(() {
-                    this._selectedTab = index;
+                    _selectedTab = index;
                   });
                 }
               },
               selectedItemColor: tBlue,
-              unselectedIconTheme: IconThemeData(
-                color: tBlack,
-              ),
+              unselectedIconTheme: const IconThemeData(color: tBlack),
               unselectedItemColor: tBlack,
               showUnselectedLabels: true,
-              items: [
+              items: const [
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.home_filled),
-                  label: "Users",
-                ),
+                    icon: Icon(Icons.home_filled), label: "Users"),
+                BottomNavigationBarItem(icon: Icon(Icons.map), label: "Bill"),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.map),
-                  label: "Bill",
-                ),
+                    icon: Icon(Icons.person_2), label: "Devices"),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.person_2),
-                  label: "Devices",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person_add),
-                  label: "Add user",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.logout),
-                  label: "Logout",
-                ),
+                    icon: Icon(Icons.logout), label: "Logout"),
               ],
             )
           : null,
       body: Row(
         children: [
           if (MediaQuery.of(context).size.width >= 640)
-            Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    extended = !extended;
-                  });
-                },
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  extended = !extended;
+                });
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
                 child: NavigationRail(
-                  onDestinationSelected: (int index) {
+                  extended: extended,
+                  selectedIndex: _selectedTab,
+                  onDestinationSelected: (index) {
                     if (index == 4) {
                       logout();
                     } else {
@@ -102,35 +87,31 @@ class _TabbarState extends State<Tabbar> {
                       });
                     }
                   },
-                  extended: extended,
-                  selectedIndex: _selectedTab,
-                  selectedIconTheme: IconThemeData(
-                    color: tBlue,
+                  leading: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 20), // Padding at the top
+                      const Icon(Icons.water_drop_outlined, color: tBlue),
+                      if (extended) // Only show the text if the rail is extended
+                        const Padding(
+                          padding: EdgeInsets.only(top: 8),
+                          child: Text('WaterWise+',
+                              style: TextStyle(
+                                  fontFamily: 'Quicksand', color: tBlue)),
+                        ),
+                    ],
                   ),
-                  selectedLabelTextStyle: TextStyle(
-                    color: tBlue,
-                  ),
-                  destinations: [
+                  selectedIconTheme: const IconThemeData(color: tBlue),
+                  selectedLabelTextStyle: const TextStyle(color: tBlue),
+                  destinations: const [
                     NavigationRailDestination(
-                      icon: Icon(Icons.home_filled),
-                      label: Text("Users"),
-                    ),
+                        icon: Icon(Icons.home_filled), label: Text("Users")),
                     NavigationRailDestination(
-                      icon: Icon(Icons.map),
-                      label: Text("Bill"),
-                    ),
+                        icon: Icon(Icons.map), label: Text("Bill")),
                     NavigationRailDestination(
-                      icon: Icon(Icons.person_2),
-                      label: Text("Devices"),
-                    ),
+                        icon: Icon(Icons.person_2), label: Text("Devices")),
                     NavigationRailDestination(
-                      icon: Icon(Icons.person_add),
-                      label: Text("Add User"),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.logout),
-                      label: Text("Logout"),
-                    ),
+                        icon: Icon(Icons.logout), label: Text("Logout")),
                   ],
                 ),
               ),
@@ -138,22 +119,9 @@ class _TabbarState extends State<Tabbar> {
           Expanded(
             child: Stack(
               children: [
-                renderView(
-                  0,
-                  const AllUsersScreen(),
-                ),
-                renderView(
-                  1,
-                  Bill(),
-                ),
-                renderView(
-                  2,
-                  DeviceScreen(),
-                ),
-                renderView(
-                  3,
-                  const DialogueBox(),
-                ),
+                renderView(0, const Table02UserListWidget()),
+                renderView(1, const Bill()),
+                renderView(2, DeviceScreen()),
               ],
             ),
           ),
