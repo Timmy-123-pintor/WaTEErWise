@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -78,22 +79,36 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
     }
 
     try {
-      await context.read<FirebaseAuthMethods>().loginWithEmail(
-            email: email,
-            password: password,
-            context: context,
-          );
+      UserCredential userCredential =
+          await context.read<FirebaseAuthMethods>().loginWithEmail(
+                email: email,
+                password: password,
+                context: context,
+              );
 
-      await _saveRememberedCredentials();
-
-      _showSnackBar(context, 'Login Successfully!');
-      Navigator.pushNamedAndRemoveUntil(
-          context, Tabbar.routeName, (route) => false);
+      // Fetch the user's role
+      String? role = await context
+          .read<FirebaseAuthMethods>()
+          .getUserRole(userCredential.user!.uid);
+      if (role == 'admin') {
+        // If the user is an admin, save the credentials and navigate to the admin page
+        await _saveRememberedCredentials();
+        _showSnackBar(context, 'Login Successfully!');
+        Navigator.pushNamedAndRemoveUntil(
+            context, Tabbar.routeName, (route) => false);
+      } else {
+        // If the user is not an admin, show an error message
+        _showSnackBar(context, 'Only admin accounts can log in here.');
+      }
+    } on FirebaseAuthException catch (e) {
+      // Handle the various types of FirebaseAuthExceptions
+      _showSnackBar(context, e.message ?? 'An error occurred during login.');
     } catch (e) {
+      // Handle any other exceptions
+      _showSnackBar(context, 'An unexpected error occurred. Try again.');
       if (kDebugMode) {
         print('Login error: $e');
       }
-      _showSnackBar(context, 'Wrong email or password. Try again.');
     }
   }
 

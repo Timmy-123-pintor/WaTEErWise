@@ -32,7 +32,7 @@ class _TabbarState extends State<Tabbar> {
           ? BottomNavigationBar(
               currentIndex: _selectedTab,
               onTap: (index) {
-                if (index == 4) {
+                if (index == 3) {
                   logout();
                 } else {
                   setState(() {
@@ -79,7 +79,7 @@ class _TabbarState extends State<Tabbar> {
                   extended: extended,
                   selectedIndex: _selectedTab,
                   onDestinationSelected: (index) {
-                    if (index == 4) {
+                    if (index == 3) {
                       logout();
                     } else {
                       setState(() {

@@ -75,42 +75,31 @@ class FirebaseAuthMethods {
     }
   }
 
-  // EMAIL LOGIN
+// EMAIL LOGIN
   Future<UserCredential> loginWithEmail({
     required String email,
     required String password,
     required BuildContext context,
   }) async {
     try {
+      // Attempt to sign in without changing the auth state yet
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
 
-      // Check if user is an admin after successful login
+      // Check if user is an admin before finalizing login
       String? role = await getUserRole(userCredential.user!.uid);
       if (role != 'admin') {
+        // Sign out the user immediately if not an admin
+        await _auth.signOut();
         throw FirebaseAuthException(
             code: 'not-admin', message: 'Only admin accounts can log in here.');
       }
 
+      // If the user is an admin, return the UserCredential
       return userCredential;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        if (kDebugMode) {
-          print('No user found for that email.');
-        }
-      } else if (e.code == 'wrong-password') {
-        if (kDebugMode) {
-          print('Wrong password provided for that user.');
-        }
-      } else if (e.code == 'not-admin') {
-        if (kDebugMode) {
-          print(e.message);
-        }
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login Failed!')),
-      );
-
+    } on FirebaseAuthException {
       rethrow; // Re-throw the exception to be caught by the calling method
     }
   }
