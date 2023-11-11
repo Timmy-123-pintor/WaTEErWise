@@ -1,0 +1,12 @@
+export const serviceAccount = {
+  "type": "service_account",
+  "project_id": "waterwise-database",
+  "private_key_id": "97388e538e724955db37a76006b22181638cc850",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDEMiCCxyP4Nx7Y\nBUxzvMGXBKRxwMBh0eQF0zVB2oMsDxlKsW6FQ5RuRgCJy3/ai7aZA8fJ8tG8Fj86\nPJOEabWCLEFdwAB8NO6RAc+ChgEnPS6Amx4yqnNPN2BjP+NOkUCYTzJUFHus5YRr\nTWIPqF8r5j4Uxa8E/jJjA71t8Cv2Z8YusOBb+sLRITxwpQS9ODRXWQU19VEh/kBU\nTQnrFboMEJmbkn6EYKFEmb0XzyFB/j+YRTYtLDVDgFye07ScB1h1F3AWJXC5DTGI\nvvKoVro4JIw7mt9LSlXw2yRzVmTW4/BgcvKVRLWVmZd9a6YCZsoGBrbOqG6SC3l4\n6KKGepF5AgMBAAECggEASD/FZSN8hX2W6CobW0uZZsmY3SMENYGbnOGIbTXQtDrj\nL3RjpMOcN3ej3xqHfK2Skoqn2iCHR+JRalrAYDSlWMh/UczQ4OyFJfUqu4ApkI+h\nPk7hMfs+918HKcVvKZGn3e7cM8ZPPP5QY0td3zI7yejB19hseUQ6vee0rHWTWut6\nIRZKIQZW+3xJwcOUq5Vd8r8AFksDkp+Btq8xLJm2HVjYEc4exqSkeTDqc3dQSF6j\nzATxtuYBSQesPnYs8MBdEr/u8VAu6dBfj8SeoaR8O5qWgRsH2t0s8qeMFlJPJfmV\nIvWy2fzbWwgSqAOf50G6Tl8oo5su9duqSEMNit9/WQKBgQD6qleHbEqrMXLBmTvt\nK0TcDzOl+wotlbpG3IchEWJnx8u1WeXEjoppBN+n4fX7fADEHWVsPjSXA5f8FvhA\nhfzBsdkuG1EQRblWzV8CZsDMUOkzZ84HMBqiqV1Ont5KUcf9fM+vVbcUqkS7cHSr\nKIs0VMdzqondDDHTqGdDKG/IawKBgQDIXwcQLS9RX12jUaLwwXi04jLKzA8e59wl\nMJD63TEIfcXBy/OJGCW+Ev29rHaQjR/eses/ZuXhbRtCEI++bzcDxi5vSBUO/EGI\nCOnJ4C0hDSfDtg/UoMlndYXIcduxHxQ8agvgEm6pbXg6ZG5FpTTRtU4Jz3PjgeBZ\nofIcSWOWqwKBgQClmh4jkM6v1QZMktC9emWOwNhNYtGxlgavxAfeN978U0nosNCU\nj9svUJH2Ftls4NqcthMIdPxHfI9Pc1llP1/iE3448MEYcAfnKd0H+ByNnzLBzGWX\n6BbgueW0CE8xaGAovulym71NgMPR1ZSucyWsWApBBzz3dZQBknNOMgvPqwKBgACG\nn1IfjDw+b9R55l+TYmm3HkMB/hgqq509X2QJKJPJILe9fUoi0haJnjjdNwJyHF9N\nQDzOXFQXITcvK/FoAVD1ODH6knOTnehpfZOWDwhDLJOK6se4FE89M7iu89CnMDpo\nXNedtMSlEOe2U8PDBzx1qVrFPJygPqJ9llEUsDo5AoGAB+/pFHyox+AqVUHFO+T4\nIWXL7eU/8+PWipQ6ymTDOlJa2nGMUlQvxq+pqUtMhsw9IzjXXalyEp7VznEO+skK\nSigFgsTFsXxdnyGWvfGqz7Q0a1NlXVNTFhEEVmTaWieiS5A8a9QmFlUBDPBNR73F\nVVr2J54w1eg8uq5uW4lm1sA=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-mzebg@waterwise-database.iam.gserviceaccount.com",
+  "client_id": "100690944639204526763",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-mzebg%40waterwise-database.iam.gserviceaccount.com",
+  };

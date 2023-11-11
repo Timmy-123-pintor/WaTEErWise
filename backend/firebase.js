@@ -14,5 +14,7 @@ const app = firebaseAdmin.initializeApp({
 });
 
 export const auth = app.auth();
+export const sensor = app.database(); 
 export const db = app.firestore(); 
 export default app;
+
