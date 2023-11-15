@@ -61,15 +61,22 @@ class _MainPageState extends State<MainPage> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: ListView(
-                  children: const [
-                    SizedBox(
+                  children: [
+                    const SizedBox(
                       height: 15,
                     ),
-                    WaterConsumption(),
-                    SizedBox(
+                    // WaterConsumption(
+                    //   userEmail: 'renfil2001@gmail.com',
+                    // ),
+                    if (FirebaseAuth.instance.currentUser != null)
+                      WaterConsumption(
+                        userEmail:
+                            FirebaseAuth.instance.currentUser!.email ?? "",
+                      ),
+                    const SizedBox(
                       height: 10,
                     ),
-                    Center(
+                    const Center(
                       child: Row(
                         children: [
                           Expanded(
@@ -86,11 +93,11 @@ class _MainPageState extends State<MainPage> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    ConsumptionTrend(),
-                    SizedBox(
+                    const ConsumptionTrend(),
+                    const SizedBox(
                       height: 10,
                     ),
                   ],

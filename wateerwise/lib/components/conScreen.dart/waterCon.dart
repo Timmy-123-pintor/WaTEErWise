@@ -1,43 +1,69 @@
-// ignore_for_file: file_names, deprecated_member_use, unnecessary_import
+// ignore_for_file: library_private_types_in_public_api
+
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:wateerwise/services/firebase_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
+
 import '../../constant.dart';
 
 class WaterConsumption extends StatefulWidget {
-  const WaterConsumption({Key? key}) : super(key: key);
+  final String userEmail;
+
+  const WaterConsumption({Key? key, required this.userEmail}) : super(key: key);
 
   @override
   _WaterConsumptionState createState() => _WaterConsumptionState();
 }
 
 class _WaterConsumptionState extends State<WaterConsumption> {
-  DatabaseReference? databaseReference;
+  late String apiUrl;
+  double totalLiters = 0.0;
 
   @override
   void initState() {
     super.initState();
-    final String uid = FirebaseAuth.instance.currentUser!.uid;
-    databaseReference = FirebaseService()
-        .mainReference
-        .child("users/$uid/waterflow/totalLiters");
+    apiUrl =
+        'http://localhost:3000/api/sensor/${widget.userEmail}/sensor1/totalLiters';
+    fetchData();
   }
 
-  Stream<DataSnapshot> getFlowRateStream() {
-    if (databaseReference != null) {
-      return databaseReference!.onValue.map((event) => event.snapshot);
-    } else {
-      return const Stream<DataSnapshot>.empty();
-    }
-  }
+  Future<void> fetchData() async {
+    try {
+      String apiUrl =
+          'http://localhost:3000/api/sensor/${widget.userEmail}/sensor1/totalLiters';
+      var response = await http.get(Uri.parse(apiUrl));
 
-  Future<void> _reloadData() async {
-    if (databaseReference != null) {
-      await databaseReference!.once();
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+
+        if (data is Map<String, dynamic>) {
+          // Check if the data is in the expected format
+          if (data.containsKey('totalLiters')) {
+            setState(() {
+              totalLiters = data['totalLiters'];
+            });
+          } else {
+            if (kDebugMode) {
+              print('Error: Unexpected data format');
+            }
+          }
+        } else {
+          if (kDebugMode) {
+            print('Error: Unexpected response format');
+          }
+        }
+      } else {
+        if (kDebugMode) {
+          print('Error: ${response.reasonPhrase}');
+        }
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error fetching data: $error');
+      }
     }
   }
 
@@ -45,74 +71,47 @@ class _WaterConsumptionState extends State<WaterConsumption> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        RefreshIndicator(
-          onRefresh: _reloadData,
-          child: StreamBuilder<DataSnapshot>(
-            stream: getFlowRateStream(),
-            builder:
-                (BuildContext context, AsyncSnapshot<DataSnapshot> snapshot) {
-              double displayValue = 0;
-
-              var snapValue = snapshot.data?.value;
-
-              if (snapValue is int) {
-                displayValue = snapValue.toDouble();
-              } else if (snapValue is double) {
-                displayValue = snapValue;
-              }
-              return Stack(
+        Stack(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.height * 0.2,
+              decoration: BoxDecoration(
+                color: tWhite,
+                image: const DecorationImage(
+                  image: AssetImage('assets/GIF/waterdrop.gif'),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    decoration: BoxDecoration(
-                      color: tWhite,
-                      image: const DecorationImage(
-                        image: AssetImage('assets/GIF/waterdrop.gif'),
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '$displayValue',
-                          style: GoogleFonts.quicksand(
-                            textStyle: conText1,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'Current Water Consumption',
-                          style: GoogleFonts.quicksand(
-                            textStyle: conText2,
-                          ),
-                        ),
-                      ],
+                  Text(
+                    '$totalLiters Liters', // Display the totalLiters value
+                    style: GoogleFonts.quicksand(
+                      textStyle: conText1,
                     ),
                   ),
-                  Positioned(
-                    top: 10,
-                    right: 10,
-                    child: IconButton(
-                      icon: const Icon(Icons.refresh),
-                      onPressed: _reloadData,
-                      color: tBlue,
+                  const SizedBox(height: 10),
+                  Text(
+                    'Current Water Consumption',
+                    style: GoogleFonts.quicksand(
+                      textStyle: conText2,
                     ),
                   ),
                 ],
-              );
-            },
-          ),
+              ),
+            ),
+          ],
         ),
       ],
     );
