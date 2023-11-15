@@ -1,9 +1,7 @@
 import mqtt from 'mqtt';
 import firebaseAdmin from 'firebase-admin';
 import { sensor } from '../../../backend/firebase.js'
-// import firebase from '../../firebase.js';
 
-// const { sensor } = firebase;
 let client = null;
 
 const userSensorMap = {
@@ -59,9 +57,6 @@ const connect = () => {
             }
         });
 
-        // client.on('error', (error) => {
-        //     console.error('MQTT Connection Error:', error);
-        // });
     }
 };
 
@@ -73,30 +68,30 @@ const storeDeviceData = (deviceId, data) => {
         return;
     }
     const userPath = emailToPath(userEmail);
+
+    const litersMatch = data.match(/Total Volume: (\d+\.\d+)/);
+    const cubicMetersMatch = data.match(/Cubic Meters: (\d+\.\d+)/);
+    
+    if (!litersMatch || !cubicMetersMatch) {
+        console.log(`Couldn't find liters or cubic meters in the data.`);
+        return;
+    }
+
+    const totalLiters = parseFloat(litersMatch[1]);
+    const totalCubicMeters = parseFloat(cubicMetersMatch[1]);
+
     const dataRef = sensor.ref(`user/${userPath}/sensors/${deviceId}`);
     dataRef.set({
-        timestamp: firebaseAdmin.database.ServerValue.TIMESTAMP,
-        data: data
+        // timestamp: firebaseAdmin.database.ServerValue.TIMESTAMP,
+        data: data,
+        totalLiters,
+        totalCubicMeters,
     }).then(() => {
         console.log(`Data for device ${deviceId} stored successfully.`);
     }).catch((error) => {
         console.error(`Error storing data for device ${deviceId}: ${error}`);
     });
 };
-
-// const dataRef = firebaseAdmin.database().ref(`user/${userPath}/sensors/${deviceId}`);
-// dataRef.push({
-//     timestamp: firebaseAdmin.database.ServerValue.TIMESTAMP,
-//     data: data
-// });
-
-// const subscribe = (topic) => {
-//     if (client && client.connected) {
-//         client.subscribe(topic);
-//     } else {
-//         console.error('MQTT Subscribe Error: Client not connected');
-//     }
-// };
 
 const publish = (topic, message) => {
     if (client && client.connected) {
@@ -132,11 +127,6 @@ const handleDeviceStatus = (deviceId, status) => {
         // Implement additional actions as needed
     }
 };
-
-// const storeDeviceData = (deviceId, data) => {
-//     console.log(`Received data from device ${deviceId}: ${data}`);
-//     // Implement database storage logic here
-// };
 
 const handleDeviceAlert = (deviceId, alertMessage) => {
     console.log(`Received alert from device ${deviceId}: ${alertMessage}`);
