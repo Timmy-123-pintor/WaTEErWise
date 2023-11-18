@@ -21,19 +21,51 @@ class WaterConsumption extends StatefulWidget {
 class _WaterConsumptionState extends State<WaterConsumption> {
   late String apiUrl;
   double totalLiters = 0.0;
+  String sensorId = ""; // Initialize with an empty string
 
   @override
   void initState() {
     super.initState();
-    apiUrl =
-        'http://localhost:3000/api/sensor/${widget.userEmail}/sensor1/totalLiters';
-    fetchData();
+    // Fetch the sensor ID dynamically
+    fetchSensorId();
   }
 
-  Future<void> fetchData() async {
+  Future<void> fetchSensorId() async {
     try {
       String apiUrl =
-          'http://localhost:3000/api/sensor/${widget.userEmail}/sensor1/totalLiters';
+          'http://localhost:3000/api/getSensorId/${widget.userEmail}';
+      var response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+
+        if (data is Map<String, dynamic> && data.containsKey('sensorId')) {
+          setState(() {
+            sensorId = data['sensorId'];
+          });
+          // Now that you have the sensor ID, fetch the sensor data
+          fetchSensorData();
+        } else {
+          if (kDebugMode) {
+            print('Error: Unexpected response format');
+          }
+        }
+      } else {
+        if (kDebugMode) {
+          print('Error: ${response.reasonPhrase}');
+        }
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error fetching sensor ID: $error');
+      }
+    }
+  }
+
+  Future<void> fetchSensorData() async {
+    try {
+      String apiUrl =
+          'http://localhost:3000/api/sensor/${widget.userEmail}/$sensorId/totalLiters';
       var response = await http.get(Uri.parse(apiUrl));
 
       if (response.statusCode == 200) {
