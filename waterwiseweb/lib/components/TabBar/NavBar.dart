@@ -1,5 +1,8 @@
+// ignore_for_file: file_names, use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:waterwiseweb/Screens/bill.dart';
 import 'package:waterwiseweb/components/Dashboard/all_users_screen.dart';
 import 'package:waterwiseweb/components/Devices/user_devices.dart';
@@ -55,27 +58,19 @@ class _TabbarState extends State<Tabbar> {
               ],
             )
           : null,
-      body: Row(
-        children: [
-          if (MediaQuery.of(context).size.width >= 640)
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  extended = !extended;
-                });
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
+      body: Container(
+        color: tNavBar,
+        child: Row(
+          children: [
+            if (MediaQuery.of(context).size.width >= 640)
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    extended = !extended;
+                  });
+                },
                 child: NavigationRail(
+                  backgroundColor: tBlue,
                   extended: extended,
                   selectedIndex: _selectedTab,
                   onDestinationSelected: (index) {
@@ -87,45 +82,66 @@ class _TabbarState extends State<Tabbar> {
                       });
                     }
                   },
-                  leading: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: 20), // Padding at the top
-                      const Icon(Icons.water_drop_outlined, color: tBlue),
-                      if (extended) // Only show the text if the rail is extended
-                        const Padding(
-                          padding: EdgeInsets.only(top: 8),
-                          child: Text('WaterWise+',
-                              style: TextStyle(
-                                  fontFamily: 'Quicksand', color: tBlue)),
+                  leading: Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.water_drop_outlined,
+                          color: tWhite,
+                          size: 35.0,
                         ),
-                    ],
+                        if (extended) // Only show the text if the rail is extended
+                          Text(
+                            'WaterWise+',
+                            style: GoogleFonts.quicksand(
+                              textStyle: waterStyleW,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                   selectedIconTheme: const IconThemeData(color: tBlue),
-                  selectedLabelTextStyle: const TextStyle(color: tBlue),
+                  selectedLabelTextStyle: const TextStyle(color: tWhite),
+                  unselectedLabelTextStyle: const TextStyle(color: tWhite),
+                  unselectedIconTheme: const IconThemeData(color: tWhite),
+                  useIndicator: true,
+                  indicatorColor: tWhite,
                   destinations: const [
                     NavigationRailDestination(
-                        icon: Icon(Icons.home_filled), label: Text("Users")),
+                      icon: Icon(
+                        Icons.groups,
+                      ),
+                      label: Text("Users"),
+                    ),
                     NavigationRailDestination(
-                        icon: Icon(Icons.map), label: Text("Bill")),
+                      icon: Icon(Icons.payment),
+                      label: Text("Bill"),
+                    ),
                     NavigationRailDestination(
-                        icon: Icon(Icons.person_2), label: Text("Devices")),
+                      icon: Icon(
+                        Icons.perm_device_info,
+                      ),
+                      label: Text("Devices"),
+                    ),
                     NavigationRailDestination(
-                        icon: Icon(Icons.logout), label: Text("Logout")),
+                      icon: Icon(Icons.logout),
+                      label: Text("Logout"),
+                    ),
                   ],
                 ),
               ),
+            Expanded(
+              child: Stack(
+                children: [
+                  renderView(0, const Table02UserListWidget()),
+                  renderView(1, const Bill()),
+                  renderView(2, DeviceScreen()),
+                ],
+              ),
             ),
-          Expanded(
-            child: Stack(
-              children: [
-                renderView(0, const Table02UserListWidget()),
-                renderView(1, const Bill()),
-                renderView(2, DeviceScreen()),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

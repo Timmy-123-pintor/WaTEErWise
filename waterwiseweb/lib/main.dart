@@ -33,9 +33,9 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData.dark().copyWith(
-          scaffoldBackgroundColor: tWhite,
-        ),
+        // theme: ThemeData.dark().copyWith(
+        //   scaffoldBackgroundColor: tWhite,
+        // ),
         home: const MyAppHome(),
         routes: {
           EmailPasswordLogin.routeName: (context) => const EmailPasswordLogin(),
