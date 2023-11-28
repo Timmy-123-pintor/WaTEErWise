@@ -49,6 +49,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => SummaryDialogProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => WaterConsumptionProvider(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

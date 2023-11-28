@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:wateerwise/provider/provider.dart';
 
 import '../../constant.dart';
 
@@ -20,87 +22,41 @@ class WaterConsumption extends StatefulWidget {
 
 class _WaterConsumptionState extends State<WaterConsumption> {
   late String apiUrl;
-  double totalLiters = 0.0;
-  String sensorId = ""; // Initialize with an empty string
+  String sensorId = "";
 
   @override
   void initState() {
     super.initState();
-    // Fetch the sensor ID dynamically
     fetchSensorId();
   }
 
   Future<void> fetchSensorId() async {
-    try {
-      String apiUrl =
-          'http://localhost:3000/api/getSensorId/${widget.userEmail}';
-      var response = await http.get(Uri.parse(apiUrl));
+    String url = 'http://localhost:3000/api/getSensorId/${widget.userEmail}';
+    Map<String, dynamic> data =
+        await Provider.of<WaterConsumptionProvider>(context, listen: false)
+            .fetchData(url);
 
-      if (response.statusCode == 200) {
-        var data = json.decode(response.body);
-
-        if (data is Map<String, dynamic> && data.containsKey('sensorId')) {
-          setState(() {
-            sensorId = data['sensorId'];
-          });
-          // Now that you have the sensor ID, fetch the sensor data
-          fetchSensorData();
-        } else {
-          if (kDebugMode) {
-            print('Error: Unexpected response format');
-          }
-        }
-      } else {
-        if (kDebugMode) {
-          print('Error: ${response.reasonPhrase}');
-        }
-      }
-    } catch (error) {
+    if (data.containsKey('sensorId')) {
+      setState(() {
+        sensorId = data['sensorId'];
+      });
+      fetchSensorData();
+    } else {
       if (kDebugMode) {
-        print('Error fetching sensor ID: $error');
+        print('Error: Unexpected response format');
       }
     }
   }
 
   Future<void> fetchSensorData() async {
-    try {
-      String apiUrl =
-          'http://localhost:3000/api/sensor/${widget.userEmail}/$sensorId/totalLiters';
-      var response = await http.get(Uri.parse(apiUrl));
-
-      if (response.statusCode == 200) {
-        var data = json.decode(response.body);
-
-        if (data is Map<String, dynamic>) {
-          // Check if the data is in the expected format
-          if (data.containsKey('totalLiters')) {
-            setState(() {
-              totalLiters = data['totalLiters'];
-            });
-          } else {
-            if (kDebugMode) {
-              print('Error: Unexpected data format');
-            }
-          }
-        } else {
-          if (kDebugMode) {
-            print('Error: Unexpected response format');
-          }
-        }
-      } else {
-        if (kDebugMode) {
-          print('Error: ${response.reasonPhrase}');
-        }
-      }
-    } catch (error) {
-      if (kDebugMode) {
-        print('Error fetching data: $error');
-      }
-    }
+    Provider.of<WaterConsumptionProvider>(context, listen: false)
+        .fetchSensorData(widget.userEmail, sensorId);
   }
 
   @override
   Widget build(BuildContext context) {
+    final totalLiters =
+        Provider.of<WaterConsumptionProvider>(context).totalLiters;
     return Column(
       children: [
         Stack(
