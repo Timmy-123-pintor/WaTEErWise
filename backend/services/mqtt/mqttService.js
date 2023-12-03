@@ -1,6 +1,7 @@
 import mqtt from 'mqtt';
 import firebaseAdmin from 'firebase-admin';
 import { sensor } from '../../../backend/firebase.js'
+import { startOfWeek, startOfMonth, isSameWeek, isSameMonth} from 'date-fns';
 
 let client = null;
 
@@ -86,11 +87,48 @@ const storeDeviceData = (deviceId, data) => {
         data: data,
         totalLiters,
         totalCubicMeters,
+
+        weeklyData: processWeeklyData(totalLiters, totalCubicMeters),
+        monthlyData: processMonthlyData(totalLiters, totalCubicMeters),
     }).then(() => {
         console.log(`Data for device ${deviceId} stored successfully.`);
     }).catch((error) => {
         console.error(`Error storing data for device ${deviceId}: ${error}`);
     });
+};
+
+const processWeeklyData = (liters, cubicMeters) => {
+    const today = new Date();
+    const startOfWeekDate = startOfWeek(today);
+
+    if (isSameWeek(startOfWeekDate, today)) {
+        return{
+            totalLiters: liters,
+            totalCubicMeters: cubicMeters,
+        };
+    } else {
+        return {
+            totalLiters: 0,
+            totalCubicMeters: 0,
+        }
+    }
+};
+
+const processMonthlyData = (liters, cubicMeters) => {
+    const today = new Date();
+    const startOfMonthDate = startOfMonth(today);
+
+    if (isSameMonth(startOfMonthDate, today)) {
+        return {
+            totalLiters: liters,
+            totalCubicMeters: cubicMeters,
+        };
+    } else {
+        return {
+            totalLiters: 0,
+            totalCubicMeters: 0,
+        };
+    }
 };
 
 const publish = (topic, message) => {
