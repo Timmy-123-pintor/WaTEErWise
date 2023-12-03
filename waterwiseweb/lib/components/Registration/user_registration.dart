@@ -66,7 +66,7 @@ class _AddUserState extends State<AddUser> {
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
             child: Container(
-              color: tBlack.withOpacity(0.5),
+              color: Colors.black.withOpacity(0.5),
               constraints: const BoxConstraints.expand(),
             ),
           ),
@@ -110,10 +110,7 @@ class _AddUserState extends State<AddUser> {
                     padding: const EdgeInsets.all(16),
                     decoration: const BoxDecoration(
                       color: tWhite,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(10),
-                        bottomRight: Radius.circular(10),
-                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     child: SingleChildScrollView(
                       child: Column(

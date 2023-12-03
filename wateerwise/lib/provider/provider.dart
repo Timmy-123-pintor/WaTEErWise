@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -118,50 +115,5 @@ class SummaryDialogProvider with ChangeNotifier {
         );
       },
     );
-  }
-}
-
-class WaterConsumptionProvider with ChangeNotifier {
-  double _totalLiters = 0.0;
-
-  double get totalLiters => _totalLiters;
-
-  set totalLiters(double value) {
-    _totalLiters = value;
-    notifyListeners();
-  }
-
-  Future<void> fetchSensorData(String userEmail, String sensorId) async {
-    String url =
-        'http://localhost:3000/api/sensor/$userEmail/$sensorId/totalLiters';
-    Map<String, dynamic> data = await fetchData(url);
-
-    if (data.containsKey('totalLiters')) {
-      totalLiters = data['totalLiters'];
-    } else {
-      if (kDebugMode) {
-        print('Error: Unexpected data format');
-      }
-    }
-  }
-
-  Future<Map<String, dynamic>> fetchData(String url) async {
-    try {
-      var response = await http.get(Uri.parse(url));
-
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        if (kDebugMode) {
-          print('Error: ${response.reasonPhrase}');
-        }
-        return {};
-      }
-    } catch (error) {
-      if (kDebugMode) {
-        print('Error fetching data: $error');
-      }
-      return {};
-    }
   }
 }

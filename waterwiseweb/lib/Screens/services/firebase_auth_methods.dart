@@ -15,65 +15,65 @@ class FirebaseAuthMethods {
 
   Stream<User?> get authState => FirebaseAuth.instance.authStateChanges();
 
-  // EMAIL SIGN UP
-  Future<void> signUpWithEmail({
-    required String firstName,
-    required String lastName,
-    required String email,
-    required String password,
-    required String location,
-    required String deviceName,
-    required String deviceUID,
-    required String deviceType,
-    required BuildContext context,
-  }) async {
-    try {
-      UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+  // // EMAIL SIGN UP
+  // Future<void> signUpWithEmail({
+  //   required String firstName,
+  //   required String lastName,
+  //   required String email,
+  //   required String password,
+  //   required String location,
+  //   required String deviceName,
+  //   required String deviceUID,
+  //   required String deviceType,
+  //   required BuildContext context,
+  // }) async {
+  //   try {
+  //     UserCredential userCredential =
+  //         await _auth.createUserWithEmailAndPassword(
+  //       email: email,
+  //       password: password,
+  //     );
 
-      if (userCredential.user == null) {
-        return;
-      }
+  //     if (userCredential.user == null) {
+  //       return;
+  //     }
 
-      // Add the user data to Firestore
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userCredential.user!.uid)
-          .set({
-            'firstName': firstName,
-            'lastName': lastName,
-            'email': email,
-            'role': 'user',
-            'location': location,
-            'deviceName': deviceName,
-            'deviceUID': deviceUID,
-            'deviceType': deviceType,
-          })
-          .then((value) => print("User Added"))
-          .catchError((error) => print("Failed to add user: $error"));
+  //     // Add the user data to Firestore
+  //     await FirebaseFirestore.instance
+  //         .collection('users')
+  //         .doc(userCredential.user!.uid)
+  //         .set({
+  //           'firstName': firstName,
+  //           'lastName': lastName,
+  //           'email': email,
+  //           'role': 'user',
+  //           'location': location,
+  //           'deviceName': deviceName,
+  //           'deviceUID': deviceUID,
+  //           'deviceType': deviceType,
+  //         })
+  //         .then((value) => print("User Added"))
+  //         .catchError((error) => print("Failed to add user: $error"));
 
-      User? user = _auth.currentUser;
+  //     User? user = _auth.currentUser;
 
-      if (user != null && !user.emailVerified) {
-        await user.sendEmailVerification();
-        showSnackBar(context, 'Email verification sent!');
-      }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        if (kDebugMode) {
-          print('The password provided is too weak.');
-        }
-      } else if (e.code == 'email-already-in-use') {
-        if (kDebugMode) {
-          print('The account already exists for that email.');
-        }
-      }
-      showSnackBar(context, e.message!);
-    }
-  }
+  //     if (user != null && !user.emailVerified) {
+  //       await user.sendEmailVerification();
+  //       showSnackBar(context, 'Email verification sent!');
+  //     }
+  //   } on FirebaseAuthException catch (e) {
+  //     if (e.code == 'weak-password') {
+  //       if (kDebugMode) {
+  //         print('The password provided is too weak.');
+  //       }
+  //     } else if (e.code == 'email-already-in-use') {
+  //       if (kDebugMode) {
+  //         print('The account already exists for that email.');
+  //       }
+  //     }
+  //     showSnackBar(context, e.message!);
+  //   }
+  // }
 
 // EMAIL LOGIN
   Future<UserCredential> loginWithEmail({

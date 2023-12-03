@@ -1,4 +1,5 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
+// import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:wateerwise/models/user_model.dart';
 import 'package:wateerwise/provider/provider.dart';
 import 'package:wateerwise/utils/showSnackbar.dart';
+// import 'package:http/http.dart' as http;
 
 class FirebaseAuthMethods {
   final FirebaseAuth _auth;
@@ -69,34 +71,109 @@ class FirebaseAuthMethods {
     }
   }
 
-  // EMAIL LOGIN
-  Future<UserCredential> loginWithEmail({
-    required String email,
-    required String password,
-    required BuildContext context,
-  }) async {
-    try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+// // EMAIL LOGIN
+// Future<Map<String, dynamic>> loginWithEmail({
+//   required String email,
+//   required String password,
+//   required BuildContext context,
+// }) async {
+//   try {
+//     // Send HTTP request to server for login
+//     var response = await http.post(
+//       Uri.parse('http://localhost:3000/user/login'),
+//       body: {'email': email, 'password': password},
+//     );
 
-      return userCredential;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        if (kDebugMode) {
-          print('No user found for that email.');
-        }
-      } else if (e.code == 'wrong-password') {
-        if (kDebugMode) {
-          print('Wrong password provided for that user.');
-        }
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login Failed!')),
-      );
+//     // Parse response body
+//     var responseBody = jsonDecode(response.body);
 
-      rethrow; // Re-throw the exception to be caught by the calling method
-    }
-  }
+//     // Get custom token from response body
+//     String customToken = responseBody['customToken'];
+
+//     // Use custom token to sign in
+//     UserCredential userCredential = await _auth.signInWithCustomToken(customToken);
+
+//     print('UserCredential: $userCredential');
+
+//     if (userCredential.user == null) {
+//       throw FirebaseAuthException(
+//           code: 'user-not-found', message: 'No user found for that email.');
+//     }
+
+//     String uid = userCredential.user!.uid;
+//     DocumentSnapshot userDoc =
+//         await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+//     print('UserDoc: $userDoc');
+
+//     FirebaseAuth.instance.authStateChanges().listen((User? user) {
+//       if (user == null) {
+//         print('No user is logged in');
+//       } else {
+//         print('User is logged in: ${user.uid}');
+//       }
+//     });
+
+//     String role = 'user';
+//     if (userDoc.exists) {
+//       Map<String, dynamic>? userData =
+//           userDoc.data() as Map<String, dynamic>?;
+//       print('UserData: $userData');
+//       if (userData != null) {
+//         role = userData['role'] ?? 'user';
+//       }
+//     }
+
+//     print('Role: $role');
+
+//     // Return both UserCredential and role
+//     return {
+//       'userCredential': userCredential,
+//       'role': role,
+//     };
+//   } on FirebaseAuthException catch (e) {
+//     String errorMessage = '';
+//     if (e.code == 'user-not-found') {
+//       errorMessage = 'No user found for that email.';
+//     } else if (e.code == 'wrong-password') {
+//       errorMessage = 'Wrong password provided for that user.';
+//     } else {
+//       errorMessage = 'Login Failed!';
+//     }
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(content: Text(errorMessage)),
+//     );
+
+//     rethrow;
+//   }
+// }
+
+// Future<void> loginWithCustomToken({
+//   required String email,
+//   required String password,
+//   required BuildContext context,
+// }) async {
+//   try {
+//     // Send HTTP request to your Node.js backend
+//     final response = await http.post(
+//       Uri.parse('http://localhost:3000/user/login'),
+//       body: {'email': email, 'password': password},
+//     );
+
+//     if (response.statusCode == 200) {
+//       final data = jsonDecode(response.body);
+//       final customToken = data['customToken'];
+
+//       // Sign in with the custom token
+//       await _auth.signInWithCustomToken(customToken);
+//     } else {
+//       showSnackBar(context, 'Login failed: ${response.body}');
+//     }
+//   } catch (e) {
+//     showSnackBar(context, 'Error: $e');
+//   }
+// }
+
 
   // EMAIL VERIFICATION
   Future<void> sendEmailVerification(BuildContext context) async {

@@ -20,6 +20,7 @@ export const authMiddleware = async (req, res, next) => {
 
       next();
     } catch (e) {
+      console.error(e);
       return res.status(401).send({ message: 'Invalid token' });
     }
   } else {

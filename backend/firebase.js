@@ -10,11 +10,19 @@ const serviceAccount = JSON.parse(readFileSync(resolve(__dirname, "./middleware/
 
 const app = firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert(serviceAccount),
-    databaseURL: "https://waterwise-database-default-rtdb.asia-southeast1.firebasedatabase.app"
+    databaseURL: "https://waterwise-database-default-rtdb.asia-southeast1.firebasedatabase.app",
 });
 
-export const auth = app.auth();
-export const sensor = app.database(); 
-export const db = app.firestore(); 
-export default app;
+// Initialize the storage service first
+const storage = app.storage();
 
+// Then use the storage service to get the bucket
+const firebaseBucket = app.storage().bucket("gs://waterwise-database.appspot.com");
+
+// Initialize other services
+const auth = app.auth();
+const sensor = app.database();
+const db = app.firestore();
+
+export { storage, firebaseBucket, auth, sensor, db };
+export default app;

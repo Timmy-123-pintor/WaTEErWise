@@ -5,15 +5,12 @@ const tBlue = Color(0xFF3464D4);
 const tBlueG = Color(0XFF5186FF);
 const tWhite = Color(0xFFFEFEFF);
 const tBlack = Color(0xFF3A3A3A);
-const tRed = Color.fromARGB(255, 233, 72, 72);
 const tWG = Color.fromARGB(255, 246, 246, 246);
 const alertC = Color(0XFFE9EAFB);
-const tGray = Color.fromARGB(255, 194, 194, 194);
-const tGrayD = Color.fromARGB(255, 164, 164, 164);
+const tGray = Color.fromARGB(255, 219, 219, 219);
 const tGreen = Color(0XFF3F8B35);
 const tBlackG = Color.fromARGB(255, 66, 66, 66);
 const tOrange = Color(0XFFFFA500);
-const tNavBar = Color(0XFFe0e3e7);
 
 // WITH OPACITY
 const tBlackO = Color.fromRGBO(58, 58, 58, 0.401);
@@ -38,12 +35,6 @@ const subDesc = TextStyle(
   fontSize: 9,
   fontWeight: FontWeight.w500,
   color: tBlackO,
-);
-
-const subDescG = TextStyle(
-  fontSize: 14,
-  fontWeight: FontWeight.w500,
-  color: tGrayD,
 );
 
 const waterInText = TextStyle(
@@ -90,21 +81,9 @@ const profileText = TextStyle(
   color: tBlack,
 );
 
-const email = TextStyle(
-  fontSize: 13,
-  fontWeight: FontWeight.w700,
-  color: tBlue,
-);
-
 const accId = TextStyle(
   fontSize: 15,
   fontWeight: FontWeight.w400,
-  color: tBlackG,
-);
-
-const userIn = TextStyle(
-  fontSize: 15,
-  fontWeight: FontWeight.w600,
   color: tBlackG,
 );
 
@@ -138,12 +117,6 @@ const gradCon = TextStyle(
   color: tWhite,
 );
 
-const desc2 = TextStyle(
-  fontSize: 25,
-  fontWeight: FontWeight.w700,
-  color: tBlack,
-);
-
 //font size 30+ -------------------
 
 const waterInCub = TextStyle(
@@ -159,15 +132,9 @@ const conNum = TextStyle(
 );
 
 const waterStyle = TextStyle(
-  fontSize: 25,
-  fontWeight: FontWeight.w900,
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
   color: tBlue,
-);
-
-const waterStyleW = TextStyle(
-  fontSize: 25,
-  fontWeight: FontWeight.w600,
-  color: tWhite,
 );
 
 const waterWhite = TextStyle(

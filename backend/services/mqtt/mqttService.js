@@ -17,6 +17,7 @@ const emailToPath = (email) => {
 const connect = () => {
     if (!client) {
         // Adjust the broker URL as needed
+        console.log('Attempting to connect to MQTT broker...');
         const options = {
             username: 'waterwiseplus', 
             password: 'waterwise+20?' 
@@ -35,6 +36,10 @@ const connect = () => {
             client.publish('sensor/your_device_id/status', 'online', { retain: true });
         });
 
+        client.on('error', (error) => {
+            console.error('MQTT Connection Error:', error);
+        });
+        
         client.on('message', (topic, message) => {
             console.log(`Received message on topic: ${topic}`); // Log every incoming message
             try {
