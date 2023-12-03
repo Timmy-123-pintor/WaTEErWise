@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wateerwise/constant.dart';
@@ -7,17 +8,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:wateerwise/services/firebase_service.dart';
 import 'package:wateerwise/widgets/consumption_chart.dart';
 
-enum GraphView { day, month, year }
+enum GraphView { day, week, month }
 
 class ConsumptionTrend extends StatefulWidget {
-  const ConsumptionTrend({super.key});
+  const ConsumptionTrend({Key? key}) : super(key: key);
 
   @override
-  State<ConsumptionTrend> createState() => _ConsumptionTrend();
+  State<ConsumptionTrend> createState() => _ConsumptionTrendState();
 }
 
-class _ConsumptionTrend extends State<ConsumptionTrend> {
-  late Stream<List<double>> dataStream;
+class _ConsumptionTrendState extends State<ConsumptionTrend> {
+  late Stream<List<FlSpot>> dataStream;
   GraphView currentView = GraphView.month;
   GraphView? _selectedView = GraphView.month; // Default to Month view
   DateTime currentDate = DateTime.now(); // Current date
@@ -36,44 +37,70 @@ class _ConsumptionTrend extends State<ConsumptionTrend> {
     'November',
     'December'
   ];
+
   int currentStartIndex = 0;
   int currentMonthIndex = 0;
   int currentYear = DateTime.now().year;
-  List<double> consumptionData = [];
+  List<FlSpot> consumptionData = [];
 
   @override
   void initState() {
     super.initState();
-    dataStream = fetchData();
+    dataStream = fetchData() as Stream<List<FlSpot>>;
   }
 
-  Stream<List<double>> fetchData() {
+  List<FlSpot> createSpotsForDayView(Map<String, double> data) {
+    return data.entries
+        .map((entry) => FlSpot(
+              double.parse(entry.key),
+              entry.value,
+            ))
+        .toList();
+  }
+
+  List<FlSpot> createSpotsForMonthView(Map<String, double> data) {
+    return data.entries
+        .map((entry) => FlSpot(
+              double.parse(entry.key), // Week of the month (1-4/5)
+              entry.value, // Water consumption
+            ))
+        .toList();
+  }
+
+  List<FlSpot> createSpotsForWeekView(Map<String, double> data) {
+    return data.entries
+        .map((entry) => FlSpot(
+              double.parse(entry.key), // Day of the week (1-7)
+              entry.value, // Water consumption
+            ))
+        .toList();
+  }
+
+  Future<List<FlSpot>> fetchData() async {
     FirebaseDatabaseMethods firebaseMethods = FirebaseDatabaseMethods(
       FirebaseAuth.instance,
       FirebaseService().mainReference,
     );
 
+    Map<String, double> dataMap;
     switch (currentView) {
       case GraphView.day:
-        // Convert the Future<double?> to Stream<List<double>>
-        return Stream.fromFuture(
-                firebaseMethods.fetchDailyWaterConsumption(currentDate))
-            .map((dailyData) => [dailyData ?? 0.0]);
+        dataMap =
+            await firebaseMethods.fetchHourlyWaterConsumptionData(currentDate);
+        return createSpotsForDayView(dataMap);
+
+      case GraphView.week:
+        dataMap =
+            await firebaseMethods.fetchWeeklyWaterConsumptionData(currentDate);
+        return createSpotsForWeekView(dataMap);
 
       case GraphView.month:
-        return firebaseMethods.waterConsumptionDataStream(
-            currentYear, currentDate.month);
-
-      case GraphView.year:
-        // You would need to handle the year view. I noticed you had logic
-        // previously that fetched the average for each month. You can use a
-        // similar approach but instead of using async/await,
-        // you'd work with streams.
-        // For now, I'm returning an empty stream.
-        return const Stream.empty();
+        dataMap =
+            await firebaseMethods.fetchWeeklyWaterConsumptionData(currentDate);
+        return createSpotsForMonthView(dataMap);
 
       default:
-        return const Stream.empty();
+        return [];
     }
   }
 
@@ -101,13 +128,13 @@ class _ConsumptionTrend extends State<ConsumptionTrend> {
               groupValue: _selectedView,
               children: const {
                 GraphView.day: Text("Day"),
+                GraphView.week: Text("Week"),
                 GraphView.month: Text("Month"),
-                GraphView.year: Text("Year"),
               },
               onValueChanged: (GraphView newValue) {
                 setState(() {
                   _selectedView = newValue;
-                  dataStream = fetchData();
+                  dataStream = fetchData() as Stream<List<FlSpot>>;
                 });
               },
             ),
@@ -168,8 +195,9 @@ class _ConsumptionTrend extends State<ConsumptionTrend> {
                 ],
               ),
             ),
-            StreamBuilder<List<double>>(
-              stream: dataStream, // Use the initialized stream
+            StreamBuilder<List<FlSpot>>(
+              // Changed type to List<FlSpot>
+              stream: dataStream,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
@@ -177,7 +205,7 @@ class _ConsumptionTrend extends State<ConsumptionTrend> {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   // If data is available, use it. Otherwise, use an empty list
-                  List<double> data = snapshot.data ?? [];
+                  List<FlSpot> data = snapshot.data ?? [];
 
                   return Stack(
                     children: <Widget>[

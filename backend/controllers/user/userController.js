@@ -1,57 +1,34 @@
 import pkg from "firebase-admin";
 const { auth, firestore } = pkg;
 
-export async function register(req, res) {
-  try {
-    const userRecord = await auth().createUser({
-      email: req.body.email,
-      password: req.body.password,
-      displayName: `${req.body.firstName} ${req.body.lastName}`,
-    });
-
-    await auth().setCustomUserClaims(userRecord.uid, { role: "user" });
-
-    await firestore().collection("users").doc(userRecord.uid).set({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      role: "user",
-    });
-
-    res
-      .status(201)
-      .send({
-        status: "Success",
-        message: "User created successfully",
-        userId: userRecord.uid,
-      });
-  } catch (err) {
-    const errorMessage =
-      err.code === "auth/email-already-exists"
-        ? "Email already exists. Please try again."
-        : "Error! Input email or password. Please try again.";
-
-    res.status(400).send({ status: "Error", message: errorMessage });
-  }
-}
-
 export async function login(req, res) {
   try {
-    // Check if the user exists
-    const userRecord = await auth().getUserByEmail(req.body.email);
+    const idToken = req.body.idToken;
 
-    // Since we're using firebase-admin, we don't verify the password here.
-    // Instead, you should have your own method of verifying passwords if needed.
+    // Verify the ID token
+    const decodedToken = await auth().verifyIdToken(idToken);
+    const uid = decodedToken.uid;
 
-    const customToken = await auth().createCustomToken(userRecord.uid);
-    res.status(200).send({ token: customToken });
-  } catch (err) {
-    if (err.code === 'auth/user-not-found') {
-      res.status(401).send({ message: 'Invalid email.' });
-    } else {
-      res.status(500).send({ message: `Error logging in user: ${err.message}` });
+    // Retrieve user record from Firestore
+    const userDocument = await firestore().collection("users").doc(uid).get();
+    const userData = userDocument.data();
+
+    if (!userData) {
+      return res.status(404).send({ message: "User not found in Firestore." });
     }
+
+    // Ensure that userData.role is set; if not, set it to a default value such as "user"
+    userData.role = userData.role || 'user';
+
+    // Send back the user's data
+    res.status(200).send({
+      userId: uid,
+      email: userData.email,
+      role: userData.role,
+    });
+
+  } catch (err) {
+    console.error('Error in login:', err);
+    res.status(500).send({ message: `Error logging in user: ${err.message}` });
   }
 }
-
-

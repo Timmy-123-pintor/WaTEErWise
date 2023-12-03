@@ -51,26 +51,9 @@ class FirebaseDatabaseMethods {
     await _getConsumptionReference(now).set({"consumption": liters});
   }
 
-  Stream<List<double>> waterConsumptionDataStream(int year, int month) {
-    return _getMonthReference(year, month).onValue.map((event) {
-      List<double> consumptionData = [];
-      if (event.snapshot.value != null) {
-        Map<String, dynamic> monthData =
-            event.snapshot.value as Map<String, dynamic>;
-        for (var dayData in monthData.values) {
-          if (dayData['consumption'] != null) {
-            consumptionData.add(dayData['consumption'].toDouble());
-          }
-        }
-      }
-      return consumptionData;
-    });
-  }
-
   Future<double?> fetchDailyWaterConsumption(DateTime date) async {
     DataSnapshot dataSnapshot = await _getConsumptionReference(date)
-        .onValue
-        .first
+        .once()
         .then((event) => event.snapshot);
 
     if (dataSnapshot.value != null) {
@@ -80,29 +63,54 @@ class FirebaseDatabaseMethods {
     return null;
   }
 
-  Future<double> fetchMonthlyWaterConsumption(int year, int month) async {
-    List<double> monthlyData =
-        await waterConsumptionDataStream(year, month).first;
-    return monthlyData.isNotEmpty ? monthlyData.reduce((a, b) => a + b) : 0.0;
-  }
+  Future<Map<String, double>> fetchHourlyWaterConsumptionData(
+      DateTime date) async {
+    DataSnapshot dataSnapshot = await _getConsumptionReference(date)
+        .once()
+        .then((event) => event.snapshot);
 
-  Future<double> fetchPreviousMonthWaterConsumption() async {
-    DateTime now = DateTime.now();
-    DateTime lastMonth = (now.month == 1)
-        ? DateTime(now.year - 1, 12, now.day)
-        : DateTime(now.year, now.month - 1, now.day);
-
-    return await fetchMonthlyWaterConsumption(lastMonth.year, lastMonth.month);
-  }
-
-  Future<List<double>> fetchYearlyAverageWaterConsumption(int year) async {
-    List<double> yearlyData = [];
-    for (int i = 0; i < 12; i++) {
-      double total = await fetchMonthlyWaterConsumption(year, i + 1);
-      double daysInMonth = DateTime(year, i + 2, 0).day as double;
-      double monthlyAverage = total / daysInMonth;
-      yearlyData.add(monthlyAverage);
+    if (dataSnapshot.value != null) {
+      Map<String, dynamic> data = dataSnapshot.value as Map<String, dynamic>;
+      return data.map((key, value) => MapEntry(key, value.toDouble()));
     }
-    return yearlyData;
+    return {};
+  }
+
+  Future<Map<String, double>> fetchWeeklyWaterConsumptionData(
+      DateTime date) async {
+    DataSnapshot dataSnapshot = await _getMonthReference(date.year, date.month)
+        .once()
+        .then((event) => event.snapshot);
+
+    Map<String, double> weeklyData = {};
+
+    if (dataSnapshot.value != null) {
+      Map<String, dynamic> monthData =
+          dataSnapshot.value as Map<String, dynamic>;
+
+      for (int i = 1; i <= 5; i++) {
+        weeklyData['Week $i'] = 0.0;
+      }
+
+      monthData.forEach((dayKey, dayData) {
+        DateTime day = DateTime(date.year, date.month, int.parse(dayKey));
+        int weekNumber = getWeekOfMonth(day);
+
+        // Safely get the consumption value
+        double consumption = dayData['consumption']?.toDouble() ?? 0.0;
+        // Safely add the consumption to the weekly total
+        weeklyData['Week $weekNumber'] =
+            (weeklyData['Week $weekNumber'] ?? 0.0) + consumption;
+      });
+    }
+
+    return weeklyData;
+  }
+
+  int getWeekOfMonth(DateTime date) {
+    int firstDayOfMonth = DateTime(date.year, date.month, 1).weekday;
+    int dayOfMonth = date.day;
+    int weekNumber = ((dayOfMonth + firstDayOfMonth - 1) / 7).ceil();
+    return weekNumber;
   }
 }

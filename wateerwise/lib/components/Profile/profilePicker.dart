@@ -1,16 +1,20 @@
-// ignore_for_file: file_names, library_private_types_in_public_api
-
+// ignore_for_file: file_names, library_private_types_in_public_api, use_build_context_synchronously
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 
 import '../../constant.dart';
 
 class ProfilePick extends StatefulWidget {
-  const ProfilePick({super.key});
+  const ProfilePick({Key? key}) : super(key: key);
 
   @override
   _ProfilePickState createState() => _ProfilePickState();
@@ -19,37 +23,128 @@ class ProfilePick extends StatefulWidget {
 class _ProfilePickState extends State<ProfilePick> {
   File? _selectedImage;
   String userName = '';
+  bool isLoading = false;
+  String userId = '';
+  String? fileName;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUser();
+  }
+
+  void fetchUser() {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) async {
+      if (user != null) {
+        setState(() {
+          userName = user.displayName ?? '';
+          userId = user.uid;
+        });
+
+        // Fetch the profile image URL from Firestore
+        DocumentSnapshot doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+        if (doc.exists) {
+          setState(() {
+            fileName = doc['profile_picture'];
+          });
+        }
+      } else {
+        if (kDebugMode) {
+          print('User is currently signed out!');
+        }
+      }
+    });
+  }
 
   Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    File? selectedImage;
 
-    if (image != null) {
+    if (kIsWeb) {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      if (result != null) {
+        selectedImage = File(result.files.single.path!);
+      }
+    } else {
+      final ImagePicker picker = ImagePicker();
+      final XFile? xFile = await picker.pickImage(source: ImageSource.gallery);
+      if (xFile != null) {
+        selectedImage = File(xFile.path);
+      }
+    }
+
+    if (selectedImage != null) {
       setState(() {
-        _selectedImage = File(image.path);
+        _selectedImage = selectedImage;
+      });
+
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await _uploadImageToFirebase(selectedImage);
+      } else {
+        print('User is not authenticated');
+      }
+    }
+  }
+
+  Future<void> getDownloadURL() async {
+    final ref = FirebaseStorage.instance.ref('profile_images');
+    String url = await ref.getDownloadURL();
+    print(url);
+  }
+
+  Future<void> _uploadImageToFirebase(File imageFile) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    if (user == null) {
+      print('User is not authenticated');
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      String fileName = basename(imageFile.path);
+      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+          .ref('profile_images/${user.uid}/$fileName');
+
+      firebase_storage.UploadTask uploadTask = ref.putFile(imageFile);
+
+      await uploadTask.whenComplete(() async {
+        var downloadURL = await ref.getDownloadURL();
+        print("Image uploaded successfully: $downloadURL");
+
+        // Update the user's profile picture in Firebase Authentication
+        await user.updateProfile(photoURL: downloadURL);
+
+        // Update the user's profile picture in Firestore
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
+          'profile_picture': downloadURL,
+        });
+
+        // Update _selectedImage to display the new image
+        setState(() {
+          _selectedImage = imageFile;
+        });
+      });
+    } catch (e) {
+      print("Error uploading image: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    void fetchUser() async {
-      try {
-        User? user = FirebaseAuth.instance.currentUser;
-        if (user != null) {
-          setState(() {
-            userName = user.displayName ?? '';
-          });
-        }
-      } catch (error) {
-        if (kDebugMode) {
-          print('Error fetching user email: $error');
-        }
-      }
-    }
-
-    fetchUser();
-
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15),
       child: Column(
@@ -70,7 +165,15 @@ class _ProfilePickState extends State<ProfilePick> {
                           image: FileImage(_selectedImage!),
                           fit: BoxFit.cover,
                         )
-                      : null,
+                      : (fileName != null
+                          ? DecorationImage(
+                              image: NetworkImage(fileName!),
+                              fit: BoxFit.cover,
+                            )
+                          : DecorationImage(
+                              image: AssetImage('images/waterwise.png'),
+                              fit: BoxFit.cover,
+                            )),
                   color: tBlack,
                 ),
               ),

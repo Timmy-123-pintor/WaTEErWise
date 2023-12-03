@@ -33,13 +33,14 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        // theme: ThemeData.dark().copyWith(
-        //   scaffoldBackgroundColor: tWhite,
-        // ),
+        title: 'WaterWise+',
+        theme: ThemeData.dark().copyWith(
+          scaffoldBackgroundColor: tWhite,
+        ),
         home: const MyAppHome(),
         routes: {
           EmailPasswordLogin.routeName: (context) => const EmailPasswordLogin(),
-          Tabbar.routeName: (context) => Tabbar(),
+          Tabbar.routeName: (context) => const Tabbar(),
         },
       ),
     );

@@ -4,7 +4,7 @@ import 'package:wateerwise/components/Graphs/HomeGraphs/consumptionGraph.dart';
 import 'package:wateerwise/constant.dart';
 
 class ConsumptionChart extends StatelessWidget {
-  final List<double> consumptionData;
+  final List<FlSpot> consumptionData;
   final bool showAvg;
   final GraphView currentView;
   final int currentStartIndex;
@@ -42,35 +42,31 @@ class ConsumptionChart extends StatelessWidget {
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
-      fontSize: 12,
+      fontSize: 16,
     );
-    String text = '';
-    int index = currentStartIndex + value.toInt();
-    int currentYear = currentDate.year;
+
+    String label;
     switch (currentView) {
       case GraphView.day:
-        // Display hours for the day
-        text = "$index:00"; // Assuming value represents hours
+        label = '${value.toInt()} hrs'; // Hours for day view
+        break;
+      case GraphView.week:
+        label = 'Day ${value.toInt()}'; // Days for week view
         break;
       case GraphView.month:
-        if (index < consumptionData.length) {
-          text = "${index + 1} ${months[currentDate.month - 1]}, $currentYear";
-        }
+        label = 'Week ${value.toInt()}'; // Weeks for month view
         break;
-      case GraphView.year:
-        if (index < months.length) {
-          text = months[index];
-        }
-        break;
+      default:
+        label = '${value.toInt()}';
     }
 
-    return Text(text, style: style, textAlign: TextAlign.left);
+    return Text(label, style: style);
   }
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
-      fontSize: 12,
+      fontSize: 15,
     );
     String text;
     switch (value.toInt()) {
@@ -155,13 +151,13 @@ class ConsumptionChart extends StatelessWidget {
       minX: 0,
       maxX: (consumptionData.length - 1).toDouble(),
       minY: 0,
-      maxY: 6,
+      maxY: 10,
       lineBarsData: [
         LineChartBarData(
-          // Replace hardcoded FlSpot values with dynamic values
-          spots: List.generate(consumptionData.length, (index) {
-            return FlSpot(index.toDouble(), consumptionData[index]);
-          }),
+          spots: List.generate(
+            consumptionData.length,
+            (index) => FlSpot(index.toDouble(), consumptionData[index].y),
+          ),
           isCurved: true,
           gradient: LinearGradient(
             colors: gradientColors,
@@ -187,7 +183,8 @@ class ConsumptionChart extends StatelessWidget {
   LineChartData avgData() {
     // Calculate the average of consumptionData
     double avg = consumptionData.isNotEmpty
-        ? consumptionData.reduce((a, b) => a + b) / consumptionData.length
+        ? consumptionData.map((e) => e.y).reduce((a, b) => a + b) /
+            consumptionData.length
         : 0;
 
     return LineChartData(
@@ -247,7 +244,7 @@ class ConsumptionChart extends StatelessWidget {
         LineChartBarData(
           // Create a line that represents the average consumption
           spots: List.generate(consumptionData.length, (index) {
-            return FlSpot(index.toDouble(), avg);
+            return FlSpot(consumptionData[index].x, avg);
           }),
           isCurved: true,
           gradient: LinearGradient(

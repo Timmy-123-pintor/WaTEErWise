@@ -93,7 +93,7 @@ class _MainPageState extends State<MainPage> {
                     const SizedBox(
                       height: 15,
                     ),
-                    const ConsumptionTrend(),
+                    // ConsumptionTrend(),
                     const SizedBox(
                       height: 10,
                     ),

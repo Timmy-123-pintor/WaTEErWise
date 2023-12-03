@@ -13,20 +13,19 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigateToNextScreen(context);
   }
 
   _navigateToNextScreen(BuildContext context) async {
     await Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => HomeScreen()),
       );
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    _navigateToNextScreen(context);
     return Scaffold(
       backgroundColor: const Color(0xFFDEF4FF),
       body: Center(

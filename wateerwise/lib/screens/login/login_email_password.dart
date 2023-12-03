@@ -1,13 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // <-- Added this import for MethodChannel
 import 'package:provider/provider.dart';
 import 'package:wateerwise/constant.dart';
 import 'package:wateerwise/main.dart';
+import 'package:wateerwise/provider/config.dart';
 import 'package:wateerwise/services/firebase_auth_methods.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -74,74 +75,54 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
     }
   }
 
-  Future<String> getServerUrl() async {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      bool isEmulator = false;
-      try {
-        isEmulator = await const MethodChannel('flutter/emulator')
-            .invokeMethod('isEmulator');
-      } catch (_) {}
-      return isEmulator ? 'http://10.0.2.2:3000' : 'http://192.168.158.85:3000';
-    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      // Handle iOS simulator and real device
-      return 'http://localhost:3000'; // for simulator
-      // return 'http://192.168.254.111:3000';
-    } else {
-      // Default for other platforms
-      return 'http://localhost:3000';
-    }
-  }
-
   Future<void> _loginUser(BuildContext context) async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
     final localContext = context;
 
-    String serverUrl = await getServerUrl();
-
     if (email.isEmpty || password.isEmpty) {
-      _showSnackBar(localContext, 'Please input something!');
+      _showSnackBar(localContext, 'Please input email and password!');
       return;
     }
 
     try {
-      if (kDebugMode) {
-        print('Sending HTTP request for login');
-      }
-      var response = await http.post(
-        Uri.parse('$serverUrl/user/login'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          'email': email,
-          'password': password,
-        }),
+      // Authenticate the user using Firebase Authentication
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
       );
-      if (kDebugMode) {
-        print('HTTP request complete. Response: ${response.statusCode}');
-      }
 
-      if (response.statusCode == 200) {
-        String customToken = jsonDecode(response.body)['token'];
-        await FirebaseAuth.instance.signInWithCustomToken(customToken);
-        _showSnackBar(localContext, 'Login successful!');
-      } else {
-        var responseJson = jsonDecode(response.body);
-        String errorMessage = responseJson['message'] ?? 'Login failed.';
-        _showSnackBar(localContext, errorMessage);
+      // Get the ID token of the authenticated user
+      String? idToken = await userCredential.user?.getIdToken();
+
+      if (idToken == null) {
+        _showSnackBar(localContext, 'Unable to get ID token. Try again.');
         return;
       }
 
-      await _saveRememberedCredentials();
+      var url = Uri.parse('${Config.apiEndpoint}/user/login');
+      var response = await http.post(url, body: {'idToken': idToken});
 
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const AuthWrapper()));
-    } catch (e) {
-      if (kDebugMode) {
-        print('Login error: $e');
+      if (response.statusCode == 200) {
+        var responseBody = jsonDecode(response.body);
+        var role = responseBody['role'];
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => AuthWrapper(role: role)),
+        );
+        _showSnackBar(localContext, 'Login successful!');
+
+        await _saveRememberedCredentials();
+      } else if (response.statusCode == 401) {
+        _showSnackBar(localContext, 'Wrong email or password. Try again.');
+      } else {
+        _showSnackBar(localContext, 'An error occurred. Try again.');
       }
-      _showSnackBar(localContext, 'Wrong email or password. Try again.');
+    } catch (e) {
+      print('Error: $e');
+      _showSnackBar(localContext, 'An error occurred. Try again.');
     }
   }
 
