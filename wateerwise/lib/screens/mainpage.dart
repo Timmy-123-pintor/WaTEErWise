@@ -63,18 +63,15 @@ class _MainPageState extends State<MainPage> {
                 child: ListView(
                   children: [
                     const SizedBox(
-                      height: 15,
+                      height: 30,
                     ),
-                    // WaterConsumption(
-                    //   userEmail: 'renfil2001@gmail.com',
-                    // ),
                     if (FirebaseAuth.instance.currentUser != null)
                       WaterConsumption(
                         userEmail:
                             FirebaseAuth.instance.currentUser!.email ?? "",
                       ),
                     const SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
                     const Center(
                       child: Row(
@@ -84,7 +81,7 @@ class _MainPageState extends State<MainPage> {
                             child: PrevComCon(),
                           ),
                           SizedBox(
-                            width: 10,
+                            width: 15,
                           ),
                           Expanded(
                             flex: 1,
@@ -94,7 +91,7 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
                     const ConsumptionTrend(),
                     const SizedBox(
