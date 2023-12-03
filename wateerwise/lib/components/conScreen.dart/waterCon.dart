@@ -17,62 +17,44 @@ class WaterConsumption extends StatefulWidget {
 
 class _WaterConsumptionState extends State<WaterConsumption> {
   late String apiUrl;
-  double totalLiters = 0.0;
-  bool isLoading = false; // New variable to track loading state
+  String sensorId = "";
 
   @override
   void initState() {
     super.initState();
-    apiUrl = 'http://localhost:3000/api/sensor/${widget.userEmail}/sensor1/totalLiters';
-    fetchData();
+    fetchSensorId();
   }
 
-  Future<void> fetchData() async {
-    setState(() {
-      isLoading = true; // Start loading
-    });
-    try {
-      var response = await http.get(Uri.parse(apiUrl));
+  Future<void> fetchSensorId() async {
+    String url = 'http://localhost:3000/api/getSensorId/${widget.userEmail}';
+    Map<String, dynamic> data =
+        await Provider.of<WaterConsumptionProvider>(context, listen: false)
+            .fetchData(url);
 
-      if (response.statusCode == 200) {
-        var data = json.decode(response.body);
-
-        if (data is Map<String, dynamic>) {
-          if (data.containsKey('totalLiters')) {
-            setState(() {
-              totalLiters = data['totalLiters'];
-            });
-          } else {
-            if (kDebugMode) {
-              print('Error: Unexpected data format');
-            }
-          }
-        } else {
-          if (kDebugMode) {
-            print('Error: Unexpected response format');
-          }
-        }
-      } else {
-        if (kDebugMode) {
-          print('Error: ${response.reasonPhrase}');
-        }
-      }
-    } catch (error) {
-      if (kDebugMode) {
-        print('Error fetching data: $error');
-      }
-    } finally {
+    if (data.containsKey('sensorId')) {
       setState(() {
-        isLoading = false; // Stop loading
+        sensorId = data['sensorId'];
       });
+      fetchSensorData();
+    } else {
+      if (kDebugMode) {
+        print('Error: Unexpected response format');
+      }
     }
+  }
+
+  Future<void> fetchSensorData() async {
+    Provider.of<WaterConsumptionProvider>(context, listen: false)
+        .fetchSensorData(widget.userEmail, sensorId);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    final totalLiters =
+        Provider.of<WaterConsumptionProvider>(context).totalLiters;
+    return Column(
       children: [
-        Column(
+        Stack(
           children: [
             Container(
               width: MediaQuery.of(context).size.width * 0.9,
@@ -93,32 +75,26 @@ class _WaterConsumptionState extends State<WaterConsumption> {
                   ),
                 ],
               ),
-              child: isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '$totalLiters Liters',
-                          style: GoogleFonts.quicksand(textStyle: conText1),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'Current Water Consumption',
-                          style: GoogleFonts.quicksand(textStyle: conText2),
-                        ),
-                      ],
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '$totalLiters Liters', // Display the totalLiters value
+                    style: GoogleFonts.quicksand(
+                      textStyle: conText1,
                     ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Current Water Consumption',
+                    style: GoogleFonts.quicksand(
+                      textStyle: conText2,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
-        ),
-        Positioned(
-          top: 10,
-          right: 10,
-          child: IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.blue),
-            onPressed: fetchData,
-          ),
         ),
       ],
     );

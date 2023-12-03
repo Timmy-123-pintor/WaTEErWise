@@ -1,8 +1,9 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, deprecated_member_use
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waterwiseweb/Screens/services/firebase_auth_methods.dart';
@@ -159,116 +160,197 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
   //   );
   // }
 
+  // Widget _buildBottom() {
+  //   return SizedBox(
+  //     width: 400,
+  //     height: 400,
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(32.0),
+  //       child: _buildForm(),
+  //     ),
+  //   );
+  // }
+
   Widget _buildBottom() {
-    return SizedBox(
-      width: 400,
-      height: 400,
-      child: Card(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(30)),
-        ),
-        color: tWhite,
-        child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: _buildForm(),
-        ),
-      ),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return SizedBox(
+          width: constraints.maxWidth,
+          height: constraints.maxHeight,
+          child: Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: _buildForm(),
+          ),
+        );
+      },
     );
   }
 
   Widget _buildForm() {
-    return SingleChildScrollView(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Text(
-          "Welcome",
-          style: TextStyle(
-              color: tBlue, fontSize: 32, fontWeight: FontWeight.bold),
-        ),
-        _buildGreyText("Please login with your information"),
-        const SizedBox(height: 20),
-        Container(
-          height: 55,
-          decoration: BoxDecoration(
-            color: tWhite,
-            borderRadius: BorderRadius.circular(6),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 7,
+        Expanded(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 10,
               ),
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/waterwise+logo.png',
+                    height: 500,
+                    width: 500,
+                    fit: BoxFit.contain,
+                  ),
+                  Positioned(
+                    bottom: 50,
+                    child: Text(
+                      'WaterWise+',
+                      style: GoogleFonts.quicksand(
+                        textStyle: conText1,
+                      ),
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
-          child: TextFormField(
-            controller: emailController,
-            style: const TextStyle(color: tBlack),
-            decoration: const InputDecoration(
-              hintText: 'Enter your email',
-              prefixIcon: Icon(Icons.email, color: tBlue),
-              border: InputBorder.none,
-              contentPadding:
-                  EdgeInsets.only(top: 25.0, left: 50.0, bottom: 25.0),
-              hintStyle: TextStyle(
-                height: 1,
-              ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(120.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Welcome",
+                  style: GoogleFonts.quicksand(
+                    textStyle: conText1,
+                  ),
+                ),
+                _buildGreyText("Please login with your information"),
+                const SizedBox(height: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Input Email",
+                      style: GoogleFonts.quicksand(
+                        textStyle: infoW7,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      height: 55,
+                      decoration: BoxDecoration(
+                        color: tWhite,
+                        borderRadius: BorderRadius.circular(6),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 7,
+                          ),
+                        ],
+                      ),
+                      child: TextFormField(
+                        controller: emailController,
+                        style: const TextStyle(color: tBlack),
+                        decoration: const InputDecoration(
+                          hintText: 'Enter your email',
+                          prefixIcon: Icon(Icons.email, color: tBlue),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.only(
+                              top: 25.0, left: 50.0, bottom: 25.0),
+                          hintStyle: TextStyle(
+                            height: 1,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: tBlue),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Passowrd",
+                      style: GoogleFonts.quicksand(
+                        textStyle: infoW7,
+                      ),
+                    ),
+                    Container(
+                      height: 55,
+                      decoration: BoxDecoration(
+                        color: tWhite,
+                        borderRadius: BorderRadius.circular(6),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 7,
+                          ),
+                        ],
+                      ),
+                      child: TextFormField(
+                        controller: passwordController,
+                        style: const TextStyle(color: tBlack),
+                        obscureText: _obscureText,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.lock, color: tBlue),
+                          hintText: 'Enter your password',
+                          suffixIcon: IconButton(
+                            splashRadius: 20.0,
+                            highlightColor: Colors.transparent,
+                            icon: _obscureText
+                                ? const Icon(Icons.visibility_off, color: tBlue)
+                                : const Icon(Icons.visibility, color: tBlue),
+                            onPressed: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.only(
+                              top: 25.0, left: 50.0, bottom: 25.0),
+                          // contentPadding: const EdgeInsets.all(0),
+                          hintStyle: const TextStyle(
+                            height: 1,
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: tBlue),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                _buildRememberForgot(),
+                const SizedBox(height: 20),
+                _buildLoginButton(),
+              ],
             ),
           ),
         ),
-        const SizedBox(height: 20),
-        Container(
-          height: 55,
-          decoration: BoxDecoration(
-            color: tWhite,
-            borderRadius: BorderRadius.circular(6),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 7,
-              ),
-            ],
-          ),
-          child: TextFormField(
-            controller: passwordController,
-            style: const TextStyle(color: tBlack),
-            obscureText: _obscureText,
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.lock, color: tBlue),
-              hintText: 'Enter your password',
-              suffixIcon: IconButton(
-                splashRadius: 20.0,
-                highlightColor: Colors.transparent,
-                icon: _obscureText
-                    ? const Icon(Icons.visibility_off, color: tBlue)
-                    : const Icon(Icons.visibility, color: tBlue),
-                onPressed: () {
-                  setState(() {
-                    _obscureText = !_obscureText;
-                  });
-                },
-              ),
-              border: InputBorder.none,
-              contentPadding:
-                  const EdgeInsets.only(top: 25.0, left: 50.0, bottom: 25.0),
-              // contentPadding: const EdgeInsets.all(0),
-              hintStyle: const TextStyle(
-                height: 1,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-        _buildRememberForgot(),
-        const SizedBox(height: 20),
-        _buildLoginButton(),
       ],
-    ));
+    );
   }
 
   Widget _buildGreyText(String text) {
     return Text(
       text,
-      style: const TextStyle(color: tBlack),
+      style: GoogleFonts.quicksand(
+        textStyle: conTextBlack,
+      ),
     );
   }
 

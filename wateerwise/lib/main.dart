@@ -11,17 +11,16 @@ import 'package:wateerwise/admin/navTabBar.dart';
 import 'package:wateerwise/components/UpperNavBar/upNavBar.dart';
 import 'package:wateerwise/firebase_options.dart';
 import 'package:wateerwise/provider/provider.dart';
-import 'package:wateerwise/provider/userRoleProvider.dart';
 import 'package:wateerwise/screens/login/login_email_password.dart';
 import 'package:wateerwise/screens/splashscreen/splash_screen.dart';
 import 'package:wateerwise/services/firebase_auth_methods.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();  
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  
+
   if (!kIsWeb) {
     await FirebaseAppCheck.instance.activate();
   }
@@ -58,7 +57,7 @@ class MyApp extends StatelessWidget {
           create: (context) => SummaryDialogProvider(),
         ),
         ChangeNotifierProvider(
-          create: (context) => UserRoleProvider(),
+          create: (_) => WaterConsumptionProvider(),
         ),
       ],
       child: MaterialApp(
@@ -116,6 +115,7 @@ class HomeScreen extends StatelessWidget {
     return doc.data()?['role'] ?? 'user';
   }
 }
+
 class AuthWrapper extends StatefulWidget {
   final String role;
 
