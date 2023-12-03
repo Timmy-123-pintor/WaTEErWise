@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const AuthWrapper()),
+        MaterialPageRoute(builder: (context) => HomeScreen()),
       );
     });
   }
@@ -28,8 +28,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFDEF4FF), 
-      body: Center( 
+      backgroundColor: const Color(0xFFDEF4FF),
+      body: Center(
         child: Image.asset('assets/images/waterwise_logo.png'),
       ),
     );
